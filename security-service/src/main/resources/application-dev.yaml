@@ -1,8 +1,12 @@
 spring:
     application:
         name: security-service
-    datasource:
+    r2dbc:
         url: ${DEV_DB_URL:r2dbc:postgresql://localhost:5432/dev}
         username: ${DEB_DB_USER:sa}
+        password: ${DEV_DB_PASSWORD:password}
+    flyway:
+        url: ${DEV_DB_URL:jdbc:postgresql://localhost:5432/dev}
+        user: ${DEB_DB_USER:sa}
         password: ${DEV_DB_PASSWORD:password}
 

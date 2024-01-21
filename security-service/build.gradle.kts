@@ -4,6 +4,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.4"
+    id("io.freefair.lombok") version "8.4"
 }
 
 group = "net.maslyna.security"
@@ -22,9 +23,14 @@ dependencies {
     implementation("org.springframework.data:spring-data-r2dbc")
     implementation("org.flywaydb:flyway-core")
     implementation("org.postgresql:r2dbc-postgresql")
+    implementation("org.postgresql:postgresql")
 
-    compileOnly("org.projectlombok:lombok")
-    testCompileOnly("org.projectlombok:lombok")
+
+//    compileOnly("org.projectlombok:lombok")
+//    annotationProcessor("org.projectlombok:lombok")
+//
+//    testCompileOnly("org.projectlombok:lombok")
+//    testAnnotationProcessor("org.projectlombok:lombok")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

@@ -19,7 +19,8 @@ public class AccountRouterConfig {
     @Bean
     public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions.route()
-                .POST("/api/v1/security", accept(MediaType.APPLICATION_JSON), handler::createAccount)
+                .POST("/api/v1/registration", accept(MediaType.APPLICATION_JSON), handler::createAccount)
+                .GET("/api/v1/login", handler::login)
                 .build();
     }
 }

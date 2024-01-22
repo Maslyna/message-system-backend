@@ -12,7 +12,7 @@ public enum Role implements GrantedAuthority {
     public final short value;
 
     @Nullable
-    public static Role getRole(int source) {
+    public static Role getRole(short source) {
         return switch (source) {
             case 0 -> ADMIN;
             case 1 -> USER;

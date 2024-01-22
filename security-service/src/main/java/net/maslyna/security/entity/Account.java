@@ -2,7 +2,6 @@ package net.maslyna.security.entity;
 
 
 import lombok.*;
-import net.maslyna.security.enums.Role;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;

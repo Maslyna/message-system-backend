@@ -1,6 +1,8 @@
 package net.maslyna.security.router.handler;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.maslyna.security.exception.GlobalSecurityServiceException;
 import net.maslyna.security.router.request.RegistrationRequest;
 import net.maslyna.security.service.AccountService;
 import net.maslyna.security.util.ObjectValidator;
@@ -21,7 +23,8 @@ public class AccountHandler {
         return request.bodyToMono(RegistrationRequest.class)
                 .flatMap(validator::validate)
                 .flatMap(req -> service.save(req.email(), req.password()))
-                .flatMap(account -> createResponse(HttpStatus.CREATED, account));
+                .flatMap(account -> createResponse(HttpStatus.CREATED, account))
+                .onErrorResume(GlobalSecurityServiceException.class, (err) -> createResponse(HttpStatus.BAD_REQUEST, err.getBody()));
     }
 
     private Mono<ServerResponse> createResponse(HttpStatusCode status, Object body) {

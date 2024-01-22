@@ -2,7 +2,7 @@ package net.maslyna.security.service;
 
 import lombok.RequiredArgsConstructor;
 import net.maslyna.security.entity.Account;
-import net.maslyna.security.enums.Role;
+import net.maslyna.security.entity.Role;
 import net.maslyna.security.exception.AccountNotFoundException;
 import net.maslyna.security.repository.AccountRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -9,4 +9,5 @@ spring:
         url: ${DEV_DB_URL:jdbc:postgresql://localhost:5432/dev}
         user: ${DEB_DB_USER:sa}
         password: ${DEV_DB_PASSWORD:password}
+        validate-migration-naming: false
 

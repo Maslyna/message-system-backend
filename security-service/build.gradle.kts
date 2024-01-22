@@ -1,4 +1,5 @@
 val springBootVersion = "3.2.1"
+val jsonWebTokenVersion = "0.12.3"
 
 plugins {
     id("java")
@@ -25,12 +26,9 @@ dependencies {
     implementation("org.postgresql:r2dbc-postgresql")
     implementation("org.postgresql:postgresql")
 
-
-//    compileOnly("org.projectlombok:lombok")
-//    annotationProcessor("org.projectlombok:lombok")
-//
-//    testCompileOnly("org.projectlombok:lombok")
-//    testAnnotationProcessor("org.projectlombok:lombok")
+    implementation("io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

@@ -27,8 +27,4 @@ public class AccountHandler {
                 .flatMap(account -> handlerService.createResponse(HttpStatus.CREATED, account))
                 .onErrorResume(GlobalSecurityServiceException.class, handlerService::createResponse);
     }
-
-    public Mono<ServerResponse> login(final ServerRequest request) {
-        String name = request.headers().firstHeader(HttpHeaders.AUTHORIZATION);
-    }
 }

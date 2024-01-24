@@ -2,7 +2,7 @@ package net.maslyna.security.config;
 
 import io.jsonwebtoken.security.Keys;
 import net.maslyna.security.filter.JwtAuthenticationFilter;
-import net.maslyna.security.jwt.JwtProperties;
+import net.maslyna.security.property.SecurityProperties;
 import net.maslyna.security.repository.AccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,9 +59,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecretKey secretKey(JwtProperties jwtProperties) {
+    public SecretKey secretKey(SecurityProperties securityProperties) {
         String secret = Base64.getEncoder().encodeToString(
-                jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8)
+                securityProperties.getSecretKey().getBytes(StandardCharsets.UTF_8)
         );
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }

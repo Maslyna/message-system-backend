@@ -1,8 +1,9 @@
-package net.maslyna.security.jwt;
+package net.maslyna.security.service;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.maslyna.security.property.SecurityProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +20,7 @@ import static java.util.stream.Collectors.joining;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtService {
-    private final JwtProperties jwtProperties;
+    private final SecurityProperties securityProperties;
     private final SecretKey secretKey;
 
     public String generateToken(Authentication authentication) {
@@ -35,10 +36,10 @@ public class JwtService {
                 .subject(username)
                 .issuer("spring.webflux.test")
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + jwtProperties.getTokenLiveTime()))
+                .expiration(new Date(System.currentTimeMillis() + securityProperties.getTokenLiveTime()))
                 .add(extraClaims);
         if (!authorities.isEmpty()) {
-            claimsBuilder.add(jwtProperties.getRoleKey(), authorities.stream()
+            claimsBuilder.add(securityProperties.getRoleKey(), authorities.stream()
                     .map(GrantedAuthority::getAuthority).collect(joining(",")));
         }
 

@@ -2,8 +2,8 @@ package net.maslyna.security.filter;
 
 import lombok.RequiredArgsConstructor;
 import net.maslyna.security.exception.AccountNotFoundException;
-import net.maslyna.security.jwt.JwtProperties;
-import net.maslyna.security.jwt.JwtService;
+import net.maslyna.security.property.SecurityProperties;
+import net.maslyna.security.service.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements WebFilter {
-    private final JwtProperties jwtProperties;
+    private final SecurityProperties securityProperties;
     private final JwtService jwtService;
     private final ReactiveUserDetailsService userDetailsService;
 
@@ -42,8 +42,8 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     private String extractToken(final ServerHttpRequest request) {
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith(jwtProperties.getPrefix())) {
-            return authHeader.substring(jwtProperties.getPrefix().length());
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(securityProperties.getJwtPrefix())) {
+            return authHeader.substring(securityProperties.getJwtPrefix().length());
         }
         return null;
     }

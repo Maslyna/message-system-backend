@@ -1,6 +1,7 @@
-package net.maslyna.security.basic;
+package net.maslyna.security.service;
 
 import lombok.RequiredArgsConstructor;
+import net.maslyna.security.property.SecurityProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,13 +11,13 @@ import java.util.Base64;
 @RequiredArgsConstructor
 @Service
 public class BasicService {
-    private static final String PREFIX = "Basic ";
+    private final SecurityProperties properties;
     private final PasswordEncoder passwordEncoder;
 
 
-    public String extractBasic(String authHeader) {
-        if (authHeader != null && authHeader.startsWith(PREFIX)) {
-            return decodeBasic(authHeader.substring(PREFIX.length()));
+    public String extractDecodedBasic(String authHeader) {
+        if (authHeader != null && authHeader.startsWith(properties.getBasicPrefix())) {
+            return decodeBasic(authHeader.substring(properties.getBasicPrefix().length()));
         }
         return null;
     }
@@ -44,7 +45,7 @@ public class BasicService {
         byte[] credentialsBytes = credentials.getBytes();
         String encodedCredentials = new String(Base64.getEncoder().encode(credentialsBytes));
 
-        return PREFIX + encodedCredentials;
+        return properties.getBasicPrefix() + encodedCredentials;
     }
 
     private String decodeBasic(String basic) {

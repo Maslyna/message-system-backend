@@ -2,9 +2,8 @@ package net.maslyna.security.service;
 
 import lombok.RequiredArgsConstructor;
 import net.maslyna.security.property.SecurityProperties;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Base64;
 
@@ -12,11 +11,10 @@ import java.util.Base64;
 @Service
 public class BasicService {
     private final SecurityProperties properties;
-    private final PasswordEncoder passwordEncoder;
 
 
     public String extractDecodedBasic(String authHeader) {
-        if (authHeader != null && authHeader.startsWith(properties.getBasicPrefix())) {
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(properties.getBasicPrefix())) {
             return decodeBasic(authHeader.substring(properties.getBasicPrefix().length()));
         }
         return null;
@@ -32,15 +30,7 @@ public class BasicService {
         return decoded.substring(separatorIndex + 1);
     }
 
-    public boolean isBasicAuthValid(String decoded, UserDetails userDetails) {
-        String username = extractUsername(decoded);
-        String password = extractPassword(decoded);
-
-        return userDetails.getUsername().equals(username)
-                && passwordEncoder.matches(password, userDetails.getPassword());
-    }
-
-    public String generateBasicAuth(String username, String password) {
+    public String generateBasicAuthenticationHeader(String username, String password) {
         String credentials = username + ":" + password;
         byte[] credentialsBytes = credentials.getBytes();
         String encodedCredentials = new String(Base64.getEncoder().encode(credentialsBytes));

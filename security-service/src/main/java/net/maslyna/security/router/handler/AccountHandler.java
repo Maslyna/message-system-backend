@@ -2,11 +2,10 @@ package net.maslyna.security.router.handler;
 
 import lombok.RequiredArgsConstructor;
 import net.maslyna.security.exception.GlobalSecurityServiceException;
-import net.maslyna.security.router.request.RegistrationRequest;
+import net.maslyna.security.model.request.RegistrationRequest;
 import net.maslyna.security.router.service.HandlerService;
 import net.maslyna.security.service.AccountService;
 import net.maslyna.security.util.ObjectValidator;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;

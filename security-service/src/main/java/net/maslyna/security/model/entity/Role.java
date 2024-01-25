@@ -1,4 +1,4 @@
-package net.maslyna.security.entity;
+package net.maslyna.security.model.entity;
 
 
 import jakarta.annotation.Nullable;

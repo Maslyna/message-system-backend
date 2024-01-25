@@ -11,7 +11,9 @@ spring:
         password: ${DEV_DB_PASSWORD:password}
         validate-migration-naming: false
 
-jwt:
-    prefix: 'Bearer '
+security:
+    jwt-prefix: 'Bearer '
+    basic-prefix: 'Basic '
+    role-key: 'role'
     secret-key: '722236765770276c3c21344b6a455f3662447d3b4b7b3e2c2b707d7e3e'
     token-live-time: 1800000

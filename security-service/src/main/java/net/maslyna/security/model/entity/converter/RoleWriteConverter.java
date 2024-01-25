@@ -1,6 +1,6 @@
-package net.maslyna.security.entity.converter;
+package net.maslyna.security.model.entity.converter;
 
-import net.maslyna.security.entity.Role;
+import net.maslyna.security.model.entity.Role;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.WritingConverter;
 

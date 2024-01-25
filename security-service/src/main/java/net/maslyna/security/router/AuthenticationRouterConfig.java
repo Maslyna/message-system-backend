@@ -19,6 +19,7 @@ public class AuthenticationRouterConfig {
     public RouterFunction<ServerResponse> authRoutes() {
         return RouterFunctions.route()
                 .GET("/api/v1/login", authorizationExists(), handler::login)
+                .GET("/api/v1/validate", authorizationExists(), handler::validate)
                 .build();
     }
 

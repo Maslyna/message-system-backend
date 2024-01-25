@@ -5,7 +5,6 @@ import net.maslyna.security.exception.AccountNotFoundException;
 import net.maslyna.security.property.SecurityProperties;
 import net.maslyna.security.service.JwtService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -27,7 +26,7 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(final ServerWebExchange exchange, final WebFilterChain chain) {
-        String token = extractToken(exchange.getRequest());
+        String token = jwtService.extractToken(exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION));
         if (StringUtils.hasText(token) && jwtService.isTokenValid(token)) {
             String username = jwtService.getUsername(token);
             return userDetailsService.findByUsername(username)
@@ -39,14 +38,6 @@ public class JwtAuthenticationFilter implements WebFilter {
         return chain.filter(exchange);
     }
 
-
-    private String extractToken(final ServerHttpRequest request) {
-        String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith(securityProperties.getJwtPrefix())) {
-            return authHeader.substring(securityProperties.getJwtPrefix().length());
-        }
-        return null;
-    }
 
     private Authentication authenticate(final UserDetails user) {
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

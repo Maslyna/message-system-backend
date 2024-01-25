@@ -2,8 +2,8 @@ package net.maslyna.security.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.maslyna.security.entity.converter.RoleReadingConverter;
-import net.maslyna.security.entity.converter.RoleWriteConverter;
+import net.maslyna.security.model.entity.converter.RoleReadingConverter;
+import net.maslyna.security.model.entity.converter.RoleWriteConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;

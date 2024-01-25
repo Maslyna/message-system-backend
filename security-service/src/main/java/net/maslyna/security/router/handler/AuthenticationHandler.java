@@ -2,6 +2,7 @@ package net.maslyna.security.router.handler;
 
 import lombok.RequiredArgsConstructor;
 import net.maslyna.security.exception.GlobalSecurityServiceException;
+import net.maslyna.security.mapper.AccountMapper;
 import net.maslyna.security.property.SecurityProperties;
 import net.maslyna.security.router.service.HandlerService;
 import net.maslyna.security.service.AuthenticationService;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthenticationHandler {
     private final AuthenticationService authenticationService;
+    private final AccountMapper mapper;
     private final HandlerService handlerService;
     private final SecurityProperties securityProperties;
 
@@ -31,6 +33,20 @@ public class AuthenticationHandler {
                 .flatMap(token -> ServerResponse.ok()
                         .header(HttpHeaders.AUTHORIZATION, securityProperties.getJwtPrefix() + token)
                         .build())
+                .onErrorResume(GlobalSecurityServiceException.class, handlerService::createResponse);
+    }
+
+    public Mono<ServerResponse> validate(final ServerRequest request) {
+        final String authHeader = request.headers().firstHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null) {
+            return handlerService.createResponse(new GlobalSecurityServiceException(
+                    HttpStatus.BAD_REQUEST,
+                    "authentication header cannot be null or empty"
+            ));
+        }
+        return authenticationService.validate(authHeader)
+                .map(mapper::accountToAccountResponse)
+                .flatMap(body -> handlerService.createResponse(HttpStatus.OK, body))
                 .onErrorResume(GlobalSecurityServiceException.class, handlerService::createResponse);
     }
 }

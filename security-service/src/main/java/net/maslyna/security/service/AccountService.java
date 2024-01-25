@@ -1,10 +1,10 @@
 package net.maslyna.security.service;
 
 import lombok.RequiredArgsConstructor;
-import net.maslyna.security.entity.Account;
-import net.maslyna.security.entity.Role;
 import net.maslyna.security.exception.AccountAlreadyExistsException;
 import net.maslyna.security.exception.AccountNotFoundException;
+import net.maslyna.security.model.entity.Account;
+import net.maslyna.security.model.entity.Role;
 import net.maslyna.security.repository.AccountRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-import static java.lang.StringTemplate.STR;
 
 @Service
 @RequiredArgsConstructor

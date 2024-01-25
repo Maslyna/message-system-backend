@@ -33,7 +33,9 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(ServerHttpSecurity.CorsSpec::disable)
                 .authorizeExchange(config -> {
-                    config.anyExchange().permitAll();
+                    config.pathMatchers("/api/v1/registration").permitAll();
+                    config.pathMatchers("/api/v1/login").permitAll();
+                    config.anyExchange().authenticated();
                 })
                 .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.HTTP_BASIC)
                 .authenticationManager(reactiveAuthenticationManager)
@@ -43,7 +45,8 @@ public class SecurityConfig {
     @Bean
     public ReactiveUserDetailsService reactiveUserDetailsService(AccountRepository repository) {
         return username -> repository.findByUsername(username)
-                .cast(UserDetails.class);
+                .map(UserDetails.class::cast);
+//                .cast(UserDetails.class);
     }
 
     @Bean

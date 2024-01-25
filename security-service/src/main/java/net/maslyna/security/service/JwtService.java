@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Collection;
@@ -22,6 +23,13 @@ import static java.util.stream.Collectors.joining;
 public class JwtService {
     private final SecurityProperties securityProperties;
     private final SecretKey secretKey;
+
+    public String extractToken(final String authHeader) {
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(securityProperties.getJwtPrefix())) {
+            return authHeader.substring(securityProperties.getJwtPrefix().length());
+        }
+        return null;
+    }
 
     public String generateToken(Authentication authentication) {
         return generateToken(authentication.getName(), authentication.getAuthorities(), Map.of());

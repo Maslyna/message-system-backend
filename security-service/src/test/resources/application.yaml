@@ -1,0 +1,10 @@
+spring:
+    application:
+        name: security-service
+
+security:
+    jwt-prefix: 'Bearer '
+    basic-prefix: 'Basic '
+    role-key: 'role'
+    secret-key: '777777777777777777777777777777777777777777777777777777777'
+    token-live-time: 1800000

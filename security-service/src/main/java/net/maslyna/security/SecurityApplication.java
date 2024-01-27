@@ -8,18 +8,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-@Slf4j
 @SpringBootApplication
 public class SecurityApplication {
     public static void main(String[] args) {
         SpringApplication.run(SecurityApplication.class, args);
-    }
-
-    @Bean
-    CommandLineRunner commandLineRunner(AccountRepository repository) {
-        return (args) -> {
-            repository.findAll().map(Account::toString)
-                    .subscribe(log::info);
-        };
     }
 }

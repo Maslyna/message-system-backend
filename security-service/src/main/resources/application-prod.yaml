@@ -1,0 +1,18 @@
+spring:
+    application:
+        name: ${SECURITY_SERVICE_NAME}
+    r2dbc:
+        url: ${PROD_DB_URL}
+        username: ${PROD_DB_USER}
+        password: ${PROD_DB_PASSWORD}
+    flyway:
+        url: ${PROD_DB_URL}
+        user: ${PROD_DB_USER}
+        password: ${PROD_DB_PASSWORD}
+
+security:
+    jwt-prefix: ${SECURITY_JWT_PREFIX}
+    basic-prefix: ${SECURITY_BASIC_PREFIX}
+    role-key: ${SECURITY_JWT_ROLE_KEY}
+    secret-key: ${SECURITY_JWT_PREFIX}
+    token-live-time: ${SECURITY_JWT_LIVETIME}

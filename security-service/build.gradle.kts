@@ -30,7 +30,11 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}")
 
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:r2dbc")
+    testImplementation("org.testcontainers:junit-jupiter")
 }
 
 dependencyManagement {

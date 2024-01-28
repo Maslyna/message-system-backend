@@ -1,6 +1,7 @@
 package net.maslyna.security.router.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.maslyna.security.exception.GlobalSecurityServiceException;
 import net.maslyna.security.router.service.HandlerService;
 import org.springframework.http.HttpStatusCode;
@@ -10,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HandlerServiceImpl implements HandlerService {
 
     @Override

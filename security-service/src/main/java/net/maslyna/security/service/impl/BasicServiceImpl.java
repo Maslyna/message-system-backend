@@ -13,7 +13,6 @@ import java.util.Base64;
 public class BasicServiceImpl implements BasicService {
     private final SecurityProperties properties;
 
-
     @Override
     public String extractDecodedBasic(String authHeader) {
         if (StringUtils.hasText(authHeader) && authHeader.startsWith(properties.getBasicPrefix())) {
@@ -34,12 +33,12 @@ public class BasicServiceImpl implements BasicService {
         return decoded.substring(separatorIndex + 1);
     }
 
-    @Override public String generateBasicAuthenticationHeader(String username, String password) {
-        String credentials = username + ":" + password;
-        byte[] credentialsBytes = credentials.getBytes();
-        String encodedCredentials = new String(Base64.getEncoder().encode(credentialsBytes));
-
-        return properties.getBasicPrefix() + encodedCredentials;
+    @Override
+    public String decodeBasic(String basic) {
+        if (basic != null) {
+            return new String(Base64.getDecoder().decode(basic));
+        }
+        return null;
     }
 
-    }
+}

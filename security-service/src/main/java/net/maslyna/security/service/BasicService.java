@@ -9,12 +9,5 @@ public interface BasicService {
 
     String extractPassword(String decoded);
 
-    String generateBasicAuthenticationHeader(String username, String password);
-
-    default String decodeBasic(String basic) {
-        if (basic != null) {
-            return new String(Base64.getDecoder().decode(basic));
-        }
-        return null;
-    }
+    String decodeBasic(String basic);
 }

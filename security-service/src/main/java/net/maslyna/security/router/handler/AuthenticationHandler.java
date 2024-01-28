@@ -23,12 +23,6 @@ public class AuthenticationHandler {
 
     public Mono<ServerResponse> login(final ServerRequest request) {
         final String authHeader = request.headers().firstHeader(HttpHeaders.AUTHORIZATION);
-        if (authHeader == null) {
-            return handlerService.createResponse(new GlobalSecurityServiceException(
-                    HttpStatus.BAD_REQUEST,
-                    "authentication header cannot be null or empty"
-            ));
-        }
         return authenticationService.login(authHeader)
                 .flatMap(token -> ServerResponse.ok()
                         .header(HttpHeaders.AUTHORIZATION, securityProperties.getJwtPrefix() + token)
@@ -38,12 +32,6 @@ public class AuthenticationHandler {
 
     public Mono<ServerResponse> validate(final ServerRequest request) {
         final String authHeader = request.headers().firstHeader(HttpHeaders.AUTHORIZATION);
-        if (authHeader == null) {
-            return handlerService.createResponse(new GlobalSecurityServiceException(
-                    HttpStatus.BAD_REQUEST,
-                    "authentication header cannot be null or empty"
-            ));
-        }
         return authenticationService.validate(authHeader)
                 .map(mapper::accountToAccountResponse)
                 .flatMap(body -> handlerService.createResponse(HttpStatus.OK, body))

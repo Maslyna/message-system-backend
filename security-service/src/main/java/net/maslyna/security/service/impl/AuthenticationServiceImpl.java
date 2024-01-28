@@ -1,6 +1,7 @@
 package net.maslyna.security.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import net.maslyna.security.exception.AccessDeniedException;
 import net.maslyna.security.exception.AccountNotFoundException;
 import net.maslyna.security.exception.GlobalSecurityServiceException;
 import net.maslyna.security.model.entity.Account;
@@ -35,11 +36,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return accountService.getAccount(username)
                 .flatMap(account -> {
                     if (!passwordEncoder.matches(password, account.getPassword())) {
-                        return Mono.error(new GlobalSecurityServiceException(HttpStatus.UNAUTHORIZED, ""));
+                        return Mono.error(new AccessDeniedException(HttpStatus.UNAUTHORIZED, "password or email not valid"));
                     }
                     return Mono.just(jwtService.generateToken(account));
-                })
-                .onErrorResume(AccountNotFoundException.class, err -> Mono.error(new GlobalSecurityServiceException(HttpStatus.UNAUTHORIZED, "")));
+                }).onErrorResume(AccountNotFoundException.class,
+                        err -> Mono.error(new AccessDeniedException(HttpStatus.UNAUTHORIZED, "password or email not valid")));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .map(jwtService::isTokenValid)
                 .flatMap(isValid -> {
                     if (!isValid) {
-                        return Mono.error(new GlobalSecurityServiceException(HttpStatus.UNAUTHORIZED, "token not valid"));
+                        return Mono.error(new AccessDeniedException(HttpStatus.UNAUTHORIZED, "token not valid"));
                     } else {
                         return accountService.getAccount(jwtService.getUsername(token));
                     }

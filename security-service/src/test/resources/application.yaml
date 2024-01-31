@@ -2,6 +2,10 @@ spring:
     application:
         name: security-service
 
+eureka:
+    client:
+        enabled: false
+
 security:
     jwt-prefix: 'Bearer '
     basic-prefix: 'Basic '

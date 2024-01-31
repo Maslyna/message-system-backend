@@ -10,6 +10,12 @@ spring:
         user: ${PROD_DB_USER}
         password: ${PROD_DB_PASSWORD}
 
+eureka:
+    client:
+        enabled: true
+        service-url:
+            defaultZone: ${PROD_EUREKA_URL}
+
 security:
     jwt-prefix: ${SECURITY_JWT_PREFIX}
     basic-prefix: ${SECURITY_BASIC_PREFIX}

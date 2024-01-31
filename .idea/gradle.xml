@@ -8,7 +8,10 @@
         <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/eureka-server" />
             <option value="$PROJECT_DIR$/security-service" />
+            <option value="$PROJECT_DIR$/user-service" />
           </set>
         </option>
       </GradleProjectSettings>

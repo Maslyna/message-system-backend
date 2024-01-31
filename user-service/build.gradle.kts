@@ -9,9 +9,8 @@ plugins {
     id("io.freefair.lombok") version "8.4"
 }
 
-group = "net.maslyna.security"
+group = "net.maslyna.user"
 version = "0.1"
-
 
 repositories {
     mavenCentral()
@@ -19,15 +18,13 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-devtools")
-    implementation("org.springframework.data:spring-data-r2dbc")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.postgresql:r2dbc-postgresql")
-    implementation("org.postgresql:postgresql")
-
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${eurekaClientVersion}")
+    implementation("org.flywaydb:flyway-core")
+
+
 
     implementation("io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}")
@@ -35,8 +32,7 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:r2dbc")
+    testImplementation("org.testcontainers:mongodb")
     testImplementation("org.testcontainers:junit-jupiter")
 }
 

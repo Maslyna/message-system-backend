@@ -9,9 +9,23 @@ services:
         volumes:
             - postgres:/data/postgres
         ports:
-            - "5432:5432"
+            - '5432:5432'
         networks:
-            - postgres
+            - db-network
+        restart: unless-stopped
+    mongo:
+        container_name: mongo
+        hostname: mongo
+        image: mongo:jammy
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root
+        volumes:
+            - mongo:/data/db
+        ports:
+            - '27017:27017'
+        networks:
+            - db-network
         restart: unless-stopped
     pgadmin:
         container_name: pgadmin
@@ -23,14 +37,15 @@ services:
         volumes:
             - pgadmin:/var/lib/pgadmin
         ports:
-            - "5050:80"
+            - '5050:80'
         networks:
-            - postgres
+            - db-network
         restart: unless-stopped
 
 networks:
-    postgres:
+    db-network:
         driver: bridge
 volumes:
+    mongo:
     postgres:
     pgadmin:

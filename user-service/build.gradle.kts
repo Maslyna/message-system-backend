@@ -20,15 +20,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-devtools")
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${eurekaClientVersion}")
+    implementation("org.springframework.data:spring-data-r2dbc")
     implementation("org.flywaydb:flyway-core")
+    implementation("org.postgresql:r2dbc-postgresql")
+    implementation("org.postgresql:postgresql")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${eurekaClientVersion}")
 
-
-
-    implementation("io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")

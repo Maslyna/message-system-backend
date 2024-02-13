@@ -13,18 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+
+//TODO: make this controller accessible only for security service
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-public class UserController {
+public class RegistrationController {
     private final UserMapper mapper;
     private final UserService userService;
 
     @PostMapping
     public Mono<UserDTO> create(@Valid @RequestBody UserDTO userDTO) {
-        return userService.save(userDTO)
+        return userService.save(userDTO.email(), userDTO.username())
                 .map(mapper::userToUserDto);
     }
 }

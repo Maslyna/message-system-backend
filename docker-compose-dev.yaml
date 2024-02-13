@@ -13,20 +13,6 @@ services:
         networks:
             - db-network
         restart: unless-stopped
-    mongo:
-        container_name: mongo
-        hostname: mongo
-        image: mongo:jammy
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: root
-        volumes:
-            - mongo:/data/db
-        ports:
-            - '27017:27017'
-        networks:
-            - db-network
-        restart: unless-stopped
     pgadmin:
         container_name: pgadmin
         image: dpage/pgadmin4:latest

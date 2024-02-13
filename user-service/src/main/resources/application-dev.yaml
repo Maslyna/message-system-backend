@@ -2,13 +2,13 @@ spring:
     application:
         name: user-service
     r2dbc:
-        url: ${DEV_DB_URL:r2dbc:postgresql://localhost:5432/dev}
-        username: ${DEB_DB_USER:root}
-        password: ${DEV_DB_PASSWORD:root}
+        url: ${DEV_DB_URL:r2dbc:postgresql://localhost:5432/user-service}
+        username: ${DEB_DB_USER:sa}
+        password: ${DEV_DB_PASSWORD:password}
     flyway:
-        url: ${DEV_DB_URL:jdbc:postgresql://localhost:5432/dev}
-        user: ${DEB_DB_USER:root}
-        password: ${DEV_DB_PASSWORD:root}
+        url: ${DEV_DB_URL:jdbc:postgresql://localhost:5432/user-service}
+        user: ${DEB_DB_USER:sa}
+        password: ${DEV_DB_PASSWORD:password}
         validate-migration-naming: false
 
 eureka:

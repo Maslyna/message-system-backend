@@ -19,11 +19,20 @@ public class UserSettings {
     @Column("user_id")
     private UUID id;
 
-    @Column("is_public")
-    private boolean isPublic;
+    @Column("is_public_email")
+    private boolean isPublicEmail;
 
-    @Column("receive_emails")
-    private boolean receiveEmails;
+    @Column("is_public_status")
+    private boolean isPublicStatus;
+
+    @Column("is_public_bio")
+    private boolean isPublicBio;
+
+    @Column("is_public_last_login")
+    private boolean isPublicLastLogin;
+
+    @Column("is_public_contacts")
+    private boolean isPublicContacts;
 
     @Column("receive_messages")
     private boolean receiveMessages;

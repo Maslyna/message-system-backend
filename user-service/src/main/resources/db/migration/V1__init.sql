@@ -20,8 +20,11 @@ CREATE TABLE t_user_contacts
 
 CREATE TABLE t_user_settings
 (
-    user_id          UUID PRIMARY KEY REFERENCES t_users (user_id),
-    is_public        BOOLEAN NOT NULL DEFAULT TRUE,
-    receive_emails   BOOLEAN NOT NULL DEFAULT TRUE,
-    receive_messages BOOLEAN NOT NULL DEFAULT TRUE
+    user_id              UUID PRIMARY KEY REFERENCES t_users (user_id),
+    is_public_email      BOOLEAN NOT NULL DEFAULT TRUE,
+    is_public_status     BOOLEAN NOT NULL DEFAULT TRUE,
+    is_public_bio        BOOLEAN NOT NULL DEFAULT TRUE,
+    is_public_last_login BOOLEAN NOT NULL DEFAULT TRUE,
+    is_public_contacts   BOOLEAN NOT NULL DEFAULT TRUE,
+    receive_messages     BOOLEAN NOT NULL DEFAULT TRUE
 );

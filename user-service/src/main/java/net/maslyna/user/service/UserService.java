@@ -6,10 +6,7 @@ import net.maslyna.user.model.entity.User;
 import net.maslyna.user.repository.UserRepository;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

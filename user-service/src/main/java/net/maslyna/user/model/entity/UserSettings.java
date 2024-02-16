@@ -20,20 +20,26 @@ public class UserSettings {
     private UUID id;
 
     @Column("is_public_email")
-    private boolean isPublicEmail;
+    @Builder.Default
+    private boolean isPublicEmail = true;
 
     @Column("is_public_status")
-    private boolean isPublicStatus;
+    @Builder.Default
+    private boolean isPublicStatus = true;
 
     @Column("is_public_bio")
-    private boolean isPublicBio;
+    @Builder.Default
+    private boolean isPublicBio = true;
 
     @Column("is_public_last_login")
-    private boolean isPublicLastLogin;
+    @Builder.Default
+    private boolean isPublicLastLogin = true;
 
     @Column("is_public_contacts")
-    private boolean isPublicContacts;
+    @Builder.Default
+    private boolean isPublicContacts = true;
 
     @Column("receive_messages")
-    private boolean receiveMessages;
+    @Builder.Default
+    private boolean receiveMessages = true;
 }

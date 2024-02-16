@@ -1,14 +1,16 @@
 package net.maslyna.user.model.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
+
+import java.time.LocalDateTime;
 
 @Builder
 public record UserDTO(
-        @Email
         String email,
-        @Size(max = 30)
-        String username
+        String username,
+        String bio,
+        String status,
+        LocalDateTime lastLogin,
+        LocalDateTime createdAt
 ) {
 }

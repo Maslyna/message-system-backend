@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.maslyna.user.mapper.UserMapper;
-import net.maslyna.user.model.dto.UserDTO;
-import net.maslyna.user.service.UserService;
+import net.maslyna.user.model.dto.RegistrationRequest;
+import net.maslyna.user.service.UserPersistenceService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,13 +20,13 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-public class RegistrationController {
+public class UserController {
     private final UserMapper mapper;
-    private final UserService userService;
+    private final UserPersistenceService userPersistenceService;
 
     @PostMapping
-    public Mono<UserDTO> create(@Valid @RequestBody UserDTO userDTO) {
-        return userService.save(userDTO.email(), userDTO.username())
+    public Mono<RegistrationRequest> create(@Valid @RequestBody RegistrationRequest body) {
+        return userPersistenceService.save(body.email(), body.username())
                 .map(mapper::userToUserDto);
     }
 }

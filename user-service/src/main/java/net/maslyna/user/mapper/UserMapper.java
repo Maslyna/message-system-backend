@@ -1,23 +1,37 @@
 package net.maslyna.user.mapper;
 
-import net.maslyna.user.model.dto.RegistrationRequest;
+import net.maslyna.user.model.dto.UserDTO;
 import net.maslyna.user.model.entity.User;
+import net.maslyna.user.model.entity.UserSettings;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public RegistrationRequest userToUserDto(User user) {
-        return RegistrationRequest.builder()
+    public UserDTO userToUserDto(User user) {
+        if (user == null)
+            return null;
+
+        return UserDTO.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .status(user.getStatus())
+                .bio(user.getBio())
+                .lastLogin(String.valueOf(user.getLastLogin()))
                 .build();
     }
 
-    public User userDtoToUser(RegistrationRequest registrationRequest) {
-        return User.builder()
-                .email(registrationRequest.email())
-                .username(registrationRequest.username())
+    public UserDTO userToUserDtoWithPrivacySettings(User user, UserSettings settings) {
+        if (user == null || settings == null)
+            return null;
+
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .email(settings.isPublicEmail() ? user.getEmail() : "")
+                .status(settings.isPublicStatus() ? user.getEmail() : "")
+                .bio(settings.isPublicBio() ? user.getBio() : "")
+                .lastLogin(settings.isPublicLastLogin() ? String.valueOf(user.getLastLogin()) : null)
+                .createdAt(user.getCreatedAt().toString())
                 .build();
     }
 }

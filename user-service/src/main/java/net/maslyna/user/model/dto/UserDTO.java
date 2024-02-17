@@ -10,7 +10,7 @@ public record UserDTO(
         String username,
         String bio,
         String status,
-        LocalDateTime lastLogin,
-        LocalDateTime createdAt
+        String lastLogin,
+        String createdAt
 ) {
 }

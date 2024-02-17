@@ -33,7 +33,14 @@ public interface UserRepository extends R2dbcRepository<User, UUID> {
 
     @Query("""
             SELECT COUNT(u.*) > 1 FROM t_users u
-            WHERE u.email = :email OR u.username = :username
+            WHERE u.user_id = :id OR u.email = :email OR u.username = :username
             """)
-    Mono<Boolean> existsUserEmailOrUsernameBy(String email, String username);
+    Mono<Boolean> existsByIdOrUserEmailOrUsernameBy(UUID id, String email, String username);
+
+    @Query("""
+            SELECT COUNT(u.*) > 1 FROM t_users u
+                JOIN t_user_contacts c ON u.user_id = c.contact_id
+            WHERE c.owner_id = :ownerId AND c.contact_id = :userId
+            """)
+    Mono<Boolean> isUserInContacts(UUID ownerId, UUID userId);
 }

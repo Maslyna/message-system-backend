@@ -26,16 +26,19 @@ public class UserPersistenceService {
     private final UserSettingsRepository settingsRepository;
 
     @Transactional
-    public Mono<User> save(final String email, final String username) {
+    public Mono<User> save(UUID id, final String email, final String username) {
+        if (id == null)
+            return Mono.error(new IllegalArgumentException("id must be specified"));
         if (!StringUtils.hasText(email) || !StringUtils.hasText(username))
             return Mono.error(new IllegalArgumentException("email or username must contain text"));
 
-        return userRepository.existsUserEmailOrUsernameBy(email, username)
+        return userRepository.existsByIdOrUserEmailOrUsernameBy(id, email, username)
                 .flatMap(exists -> {
                     if (exists)
                         return Mono.error(new UserAlreadyExists(HttpStatus.CONFLICT, "user with this email or username already exists"));
 
                     final User user = User.builder()
+                            .id(id)
                             .email(email)
                             .username(username)
                             .build();
@@ -81,5 +84,15 @@ public class UserPersistenceService {
                 .collectList()
                 .zipWith(userRepository.countContactsById(id))
                 .map(tuple -> new PageImpl<>(tuple.getT1(), page, tuple.getT2()));
+    }
+
+    public Mono<Boolean> isUserInContacts(UUID ownerId, UUID userId) {
+        return userRepository.isUserInContacts(ownerId, userId);
+    }
+
+    @Transactional
+    public Mono<Void> delete(UUID authenticatedUser) {
+        return userRepository.deleteById(authenticatedUser)
+                .then(settingsRepository.deleteById(authenticatedUser)).then();
     }
 }

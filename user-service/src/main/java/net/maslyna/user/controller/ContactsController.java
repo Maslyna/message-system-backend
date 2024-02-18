@@ -34,17 +34,13 @@ public class ContactsController {
                                      @RequestParam(value = "orderBy", defaultValue = "DESC")
                                      @Pattern(
                                              regexp = "asc|desc",
-                                             flags = {Pattern.Flag.CASE_INSENSITIVE},
-                                             message = "error.validation.sort.direction.message"
+                                             flags = {Pattern.Flag.CASE_INSENSITIVE}
                                      )
                                      String order,
                                      @RequestParam(name = "sortBy", defaultValue = "createdAt") String... sortBy
     ) {
         if (userId.equals(authenticatedUser))
-            return userPersistenceService.getUserContacts(
-                    userId,
-                    PageRequest.of(pageNum, pageSize, Sort.Direction.valueOf(order.toUpperCase()), sortBy)
-            ).map(page -> page.map(User::getId));
+            return personalContacts(authenticatedUser, pageSize, pageNum, order, sortBy);
 
         return userPersistenceService.getSettings(userId)
                 .flatMap(settings -> {
@@ -55,5 +51,23 @@ public class ContactsController {
                             userId, PageRequest.of(pageNum, pageSize, Sort.Direction.valueOf(order.toUpperCase()), sortBy)
                     ).map(page -> page.map(User::getId));
                 });
+    }
+
+    @GetMapping("/contacts")
+    public Mono<Page<UUID>> personalContacts(@RequestHeader("userId") UUID authenticatedUser,
+                                             @RequestParam(value = "size", defaultValue = "5") @Min(1) @Max(1000) Integer pageSize,
+                                             @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero Integer pageNum,
+                                             @RequestParam(value = "orderBy", defaultValue = "DESC")
+                                             @Pattern(
+                                                     regexp = "asc|desc",
+                                                     flags = {Pattern.Flag.CASE_INSENSITIVE}
+                                             )
+                                             String order,
+                                             @RequestParam(name = "sortBy", defaultValue = "createdAt") String... sortBy
+    ) {
+        return userPersistenceService.getUserContacts(
+                authenticatedUser,
+                PageRequest.of(pageNum, pageSize, Sort.Direction.valueOf(order.toUpperCase()), sortBy)
+        ).map(page -> page.map(User::getId));
     }
 }

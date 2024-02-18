@@ -3,6 +3,7 @@ package net.maslyna.user.service;
 import lombok.RequiredArgsConstructor;
 import net.maslyna.user.exception.UserAlreadyExists;
 import net.maslyna.user.exception.UserNotFoundException;
+import net.maslyna.user.model.dto.UserSettingsDTO;
 import net.maslyna.user.model.entity.User;
 import net.maslyna.user.model.entity.UserSettings;
 import net.maslyna.user.repository.UserRepository;
@@ -26,7 +27,7 @@ public class UserPersistenceService {
     private final UserSettingsRepository settingsRepository;
 
     @Transactional
-    public Mono<User> save(UUID id, final String email, final String username) {
+    public Mono<User> save(final UUID id, final String email, final String username) {
         if (id == null)
             return Mono.error(new IllegalArgumentException("id must be specified"));
         if (!StringUtils.hasText(email) || !StringUtils.hasText(username))
@@ -42,14 +43,13 @@ public class UserPersistenceService {
                             .email(email)
                             .username(username)
                             .build();
-                    final UserSettings settings = new UserSettings();
+                    final UserSettings settings = UserSettings.builder()
+                            .id(id)
+                            .build();
 
                     return userRepository.save(user)
-                            .flatMap(savedUser -> {
-                                settings.setId(savedUser.getId());
-                                return settingsRepository.save(settings)
-                                        .thenReturn(savedUser);
-                            });
+                            .flatMap(savedUser -> settingsRepository.save(settings)
+                                    .thenReturn(savedUser));
                 });
     }
 
@@ -69,14 +69,40 @@ public class UserPersistenceService {
                 .switchIfEmpty(Mono.error(new UserNotFoundException("user with id = %s not found".formatted(id))));
     }
 
-    public Flux<User> getUserContacts(UUID id) {
+    @Transactional
+    public Mono<UserSettings> updateSettings(final UUID id, final UserSettingsDTO dto) {
+        if (id == null)
+            return Mono.error(new IllegalArgumentException("id must not be null"));
+        if (dto == null)
+            return Mono.error(new IllegalArgumentException("settings must not be null"));
+
+        return getSettings(id)
+                .map(settings -> {
+                    if (dto.isPublicEmail() != null)
+                        settings.setPublicEmail(dto.isPublicEmail());
+                    if (dto.isPublicContacts() != null)
+                        settings.setPublicContacts(dto.isPublicContacts());
+                    if (dto.isPublicStatus() != null)
+                        settings.setPublicStatus(dto.isPublicStatus());
+                    if (dto.isPublicBio() != null)
+                        settings.setPublicBio(dto.isPublicBio());
+                    if (dto.receiveMessages() != null)
+                        settings.setReceiveMessages(dto.receiveMessages());
+                    if (dto.isPublicLastLogin() != null)
+                        settings.setPublicLastLogin(dto.isPublicLastLogin());
+
+                    return settings;
+                }).flatMap(settingsRepository::save);
+    }
+
+    public Flux<User> getUserContacts(final UUID id) {
         if (id == null)
             return Flux.error(new IllegalArgumentException("id must not be null"));
 
         return userRepository.findContactsById(id);
     }
 
-    public Mono<Page<User>> getUserContacts(UUID id, Pageable page) {
+    public Mono<Page<User>> getUserContacts(final UUID id, final Pageable page) {
         if (id == null || page == null)
             return Mono.error(new IllegalArgumentException("id or page must not be null"));
 
@@ -86,13 +112,15 @@ public class UserPersistenceService {
                 .map(tuple -> new PageImpl<>(tuple.getT1(), page, tuple.getT2()));
     }
 
-    public Mono<Boolean> isUserInContacts(UUID ownerId, UUID userId) {
+    public Mono<Boolean> isUserInContacts(final UUID ownerId, final UUID userId) {
         return userRepository.isUserInContacts(ownerId, userId);
     }
 
     @Transactional
-    public Mono<Void> delete(UUID authenticatedUser) {
+    public Mono<Void> delete(final UUID authenticatedUser) {
         return userRepository.deleteById(authenticatedUser)
                 .then(settingsRepository.deleteById(authenticatedUser)).then();
     }
+
+
 }

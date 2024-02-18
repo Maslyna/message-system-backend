@@ -3,11 +3,10 @@ package net.maslyna.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.maslyna.user.mapper.UserMapper;
 import net.maslyna.user.model.dto.RegistrationRequest;
-import net.maslyna.user.model.dto.UserDTO;
 import net.maslyna.user.service.UserPersistenceService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -22,18 +21,17 @@ import java.util.UUID;
 @Validated
 @Slf4j
 public class UserController {
-    private final UserMapper mapper;
     private final UserPersistenceService userPersistenceService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> create(@Valid @RequestBody RegistrationRequest body, @RequestHeader("userId") UUID authenticatedUser) {
-        return userPersistenceService.save(authenticatedUser, body.email(), body.username())
-                .then();
+    public Mono<ResponseEntity<Void>> create(@Valid @RequestBody RegistrationRequest body) {
+        return userPersistenceService.save(body.userId(), body.email(), body.username())
+                .thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
     }
 
     @DeleteMapping
-    public Mono<Void> delete(@RequestHeader("userId") UUID authenticatedUser) {
-        return userPersistenceService.delete(authenticatedUser);
+    public Mono<ResponseEntity<Void>> delete(@RequestHeader("userId") UUID authenticatedUser) {
+        return userPersistenceService.delete(authenticatedUser)
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
     }
 }

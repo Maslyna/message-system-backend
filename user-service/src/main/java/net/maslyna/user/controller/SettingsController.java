@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.maslyna.user.mapper.UserMapper;
 import net.maslyna.user.model.dto.UserSettingsDTO;
-import net.maslyna.user.service.UserPersistenceService;
+import net.maslyna.user.service.SettingService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Validated
 @Slf4j
 public class SettingsController {
-    private final UserPersistenceService service;
+    private final SettingService service;
     private final UserMapper mapper;
 
 

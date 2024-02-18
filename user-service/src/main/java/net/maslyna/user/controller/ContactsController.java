@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.maslyna.user.exception.ContactsClosedException;
 import net.maslyna.user.model.entity.User;
-import net.maslyna.user.service.UserPersistenceService;
+import net.maslyna.user.service.SettingService;
+import net.maslyna.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,7 +25,8 @@ import java.util.UUID;
 @Validated
 @Slf4j
 public class ContactsController {
-    private final UserPersistenceService userPersistenceService;
+    private final UserService userService;
+    private final SettingService settingService;
 
     @GetMapping("/{userId}/contacts")
     public Mono<Page<UUID>> contacts(@PathVariable("userId") UUID userId,
@@ -42,12 +44,12 @@ public class ContactsController {
         if (userId.equals(authenticatedUser))
             return personalContacts(authenticatedUser, pageSize, pageNum, order, sortBy);
 
-        return userPersistenceService.getSettings(userId)
+        return settingService.getSettings(userId)
                 .flatMap(settings -> {
                     if (!settings.isPublicContacts())
                         return Mono.error(new ContactsClosedException("user contacts are closed"));
 
-                    return userPersistenceService.getUserContacts(
+                    return userService.getUserContacts(
                             userId, PageRequest.of(pageNum, pageSize, Sort.Direction.valueOf(order.toUpperCase()), sortBy)
                     ).map(page -> page.map(User::getId));
                 });
@@ -65,7 +67,7 @@ public class ContactsController {
                                              String order,
                                              @RequestParam(name = "sortBy", defaultValue = "createdAt") String... sortBy
     ) {
-        return userPersistenceService.getUserContacts(
+        return userService.getUserContacts(
                 authenticatedUser,
                 PageRequest.of(pageNum, pageSize, Sort.Direction.valueOf(order.toUpperCase()), sortBy)
         ).map(page -> page.map(User::getId));

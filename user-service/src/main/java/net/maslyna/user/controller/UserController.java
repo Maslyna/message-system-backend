@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.maslyna.user.model.dto.RegistrationRequest;
-import net.maslyna.user.service.UserPersistenceService;
+import net.maslyna.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,17 +21,17 @@ import java.util.UUID;
 @Validated
 @Slf4j
 public class UserController {
-    private final UserPersistenceService userPersistenceService;
+    private final UserService userService;
 
     @PostMapping
     public Mono<ResponseEntity<Void>> create(@Valid @RequestBody RegistrationRequest body) {
-        return userPersistenceService.save(body.userId(), body.email(), body.username())
+        return userService.save(body.userId(), body.email(), body.username())
                 .thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
     }
 
     @DeleteMapping
     public Mono<ResponseEntity<Void>> delete(@RequestHeader("userId") UUID authenticatedUser) {
-        return userPersistenceService.delete(authenticatedUser)
+        return userService.delete(authenticatedUser)
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
     }
 }

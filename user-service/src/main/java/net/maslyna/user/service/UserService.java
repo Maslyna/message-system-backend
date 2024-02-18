@@ -3,16 +3,13 @@ package net.maslyna.user.service;
 import lombok.RequiredArgsConstructor;
 import net.maslyna.user.exception.UserAlreadyExists;
 import net.maslyna.user.exception.UserNotFoundException;
-import net.maslyna.user.model.dto.UserSettingsDTO;
 import net.maslyna.user.model.entity.User;
-import net.maslyna.user.model.entity.UserSettings;
 import net.maslyna.user.repository.UserRepository;
-import net.maslyna.user.repository.UserSettingsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
@@ -20,11 +17,11 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-@Repository
+@Service
 @RequiredArgsConstructor
-public class UserPersistenceService {
+public class UserService {
     private final UserRepository userRepository;
-    private final UserSettingsRepository settingsRepository;
+    private final SettingService settingService;
 
     @Transactional
     public Mono<User> save(final UUID id, final String email, final String username) {
@@ -43,12 +40,9 @@ public class UserPersistenceService {
                             .email(email)
                             .username(username)
                             .build();
-                    final UserSettings settings = UserSettings.builder()
-                            .id(id)
-                            .build();
 
                     return userRepository.save(user)
-                            .flatMap(savedUser -> settingsRepository.save(settings)
+                            .flatMap(savedUser -> settingService.save(id)
                                     .thenReturn(savedUser));
                 });
     }
@@ -59,40 +53,6 @@ public class UserPersistenceService {
 
         return userRepository.findById(id)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("user with id = %s not found".formatted(id))));
-    }
-
-    public Mono<UserSettings> getSettings(final UUID id) {
-        if (id == null)
-            return Mono.error(new IllegalArgumentException("id must not be null"));
-
-        return settingsRepository.findById(id)
-                .switchIfEmpty(Mono.error(new UserNotFoundException("user with id = %s not found".formatted(id))));
-    }
-
-    @Transactional
-    public Mono<UserSettings> updateSettings(final UUID id, final UserSettingsDTO dto) {
-        if (id == null)
-            return Mono.error(new IllegalArgumentException("id must not be null"));
-        if (dto == null)
-            return Mono.error(new IllegalArgumentException("settings must not be null"));
-
-        return getSettings(id)
-                .map(settings -> {
-                    if (dto.isPublicEmail() != null)
-                        settings.setPublicEmail(dto.isPublicEmail());
-                    if (dto.isPublicContacts() != null)
-                        settings.setPublicContacts(dto.isPublicContacts());
-                    if (dto.isPublicStatus() != null)
-                        settings.setPublicStatus(dto.isPublicStatus());
-                    if (dto.isPublicBio() != null)
-                        settings.setPublicBio(dto.isPublicBio());
-                    if (dto.receiveMessages() != null)
-                        settings.setReceiveMessages(dto.receiveMessages());
-                    if (dto.isPublicLastLogin() != null)
-                        settings.setPublicLastLogin(dto.isPublicLastLogin());
-
-                    return settings;
-                }).flatMap(settingsRepository::save);
     }
 
     public Flux<User> getUserContacts(final UUID id) {
@@ -119,7 +79,7 @@ public class UserPersistenceService {
     @Transactional
     public Mono<Void> delete(final UUID authenticatedUser) {
         return userRepository.deleteById(authenticatedUser)
-                .then(settingsRepository.deleteById(authenticatedUser)).then();
+                .then(settingService.delete(authenticatedUser)).then();
     }
 
 

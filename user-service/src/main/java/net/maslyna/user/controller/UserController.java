@@ -3,7 +3,10 @@ package net.maslyna.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.maslyna.user.mapper.UserMapper;
 import net.maslyna.user.model.dto.RegistrationRequest;
+import net.maslyna.user.model.dto.UserDTO;
+import net.maslyna.user.model.dto.UserUpdateDTO;
 import net.maslyna.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import java.util.UUID;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final UserMapper mapper;
 
     @PostMapping
     public Mono<ResponseEntity<Void>> create(@Valid @RequestBody RegistrationRequest body) {
@@ -33,5 +37,13 @@ public class UserController {
     public Mono<ResponseEntity<Void>> delete(@RequestHeader("userId") UUID authenticatedUser) {
         return userService.delete(authenticatedUser)
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+    }
+
+    @PutMapping
+    public Mono<ResponseEntity<UserDTO>> update(@RequestHeader("userId") UUID authenticatedUser,
+                                                @Valid @RequestBody UserUpdateDTO body) {
+        return userService.update(authenticatedUser, body)
+                .map(mapper::userToUserDto)
+                .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK));
     }
 }

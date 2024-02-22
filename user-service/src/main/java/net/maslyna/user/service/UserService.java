@@ -3,6 +3,7 @@ package net.maslyna.user.service;
 import lombok.RequiredArgsConstructor;
 import net.maslyna.user.exception.UserAlreadyExists;
 import net.maslyna.user.exception.UserNotFoundException;
+import net.maslyna.user.model.dto.UserUpdateDTO;
 import net.maslyna.user.model.entity.User;
 import net.maslyna.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,7 @@ public class UserService {
         if (!StringUtils.hasText(email) || !StringUtils.hasText(username))
             return Mono.error(new IllegalArgumentException("email or username must contain text"));
 
-        return userRepository.existsByIdOrUserEmailOrUsernameBy(id, email, username)
+        return userRepository.existsByIdOrUserEmailOrUsername(id, email, username)
                 .flatMap(exists -> {
                     if (exists)
                         return Mono.error(new UserAlreadyExists(HttpStatus.CONFLICT, "user with this email or username already exists"));
@@ -77,10 +78,58 @@ public class UserService {
     }
 
     @Transactional
-    public Mono<Void> delete(final UUID authenticatedUser) {
-        return userRepository.deleteById(authenticatedUser)
-                .then(settingService.delete(authenticatedUser)).then();
+    public Mono<Void> delete(final UUID id) {
+        if (id == null)
+            return Mono.error(new IllegalArgumentException("id must not be null"));
+
+        return userRepository.deleteById(id)
+                .then(settingService.delete(id)).then();
     }
 
+    @Transactional
+    public Mono<User> update(final UUID id, final UserUpdateDTO body) {
+        if (id == null) {
+            return Mono.error(new IllegalArgumentException("id must be not empty"));
+        } else if (body == null) {
+            return userRepository.findById(id);
+        }
 
+        return userRepository.findById(id)
+                .flatMap(user -> updateEmail(user, body.email()))
+                .flatMap(user -> updateUsername(user, body.username()))
+                .map(user -> {
+                    if (body.bio() != null) {
+                        user.setBio(body.bio());
+                    } else if (body.status() != null) {
+                        user.setStatus(body.status());
+                    }
+                    return user;
+                }).flatMap(userRepository::save);
+    }
+
+    private Mono<User> updateUsername(User user, String username) {
+        return username == null ? Mono.just(user)
+                : userRepository.existsByUsername(username)
+                .flatMap(exists -> {
+                    if (exists) {
+                        return Mono.error(new UserAlreadyExists("user with this username already exists"));
+                    }
+
+                    user.setUsername(username);
+                    return Mono.just(user);
+                });
+    }
+
+    private Mono<User> updateEmail(User user, String email) {
+        return email == null ? Mono.just(user)
+                : userRepository.existsByEmail(email)
+                .flatMap(exists -> {
+                    if (exists) {
+                        return Mono.error(new UserAlreadyExists("user with this email already exists"));
+                    }
+
+                    user.setEmail(email);
+                    return Mono.just(user);
+                });
+    }
 }

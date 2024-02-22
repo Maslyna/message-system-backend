@@ -35,7 +35,6 @@ public class User {
     @Column("last_login")
     private LocalDateTime lastLogin;
 
-    //@CreatedDate 'DEFAULT CURRENT_TIMESTAMP' makes this annotation cry
     @Column("created_at")
     private LocalDateTime createdAt;
 }

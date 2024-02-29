@@ -107,7 +107,7 @@ public class UserService {
                 }).flatMap(userRepository::save);
     }
 
-    private Mono<User> updateUsername(User user, String username) {
+    private Mono<User> updateUsername(final User user, final String username) {
         return username == null ? Mono.just(user)
                 : userRepository.existsByUsername(username)
                 .flatMap(exists -> {
@@ -120,7 +120,7 @@ public class UserService {
                 });
     }
 
-    private Mono<User> updateEmail(User user, String email) {
+    private Mono<User> updateEmail(final User user, final String email) {
         return email == null ? Mono.just(user)
                 : userRepository.existsByEmail(email)
                 .flatMap(exists -> {

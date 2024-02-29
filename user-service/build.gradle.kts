@@ -1,6 +1,5 @@
 val springBootVersion = "3.2.1"
 val eurekaClientVersion = "4.1.0"
-val jsonWebTokenVersion = "0.12.3"
 
 plugins {
     id("java")
@@ -29,7 +28,7 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:mongodb")
+    testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:junit-jupiter")
 }
 

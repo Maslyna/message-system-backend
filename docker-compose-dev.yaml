@@ -11,7 +11,7 @@ services:
         ports:
             - '5432:5432'
         networks:
-            - db-network
+            - postgres-network
         restart: unless-stopped
     cass1:
         image: cassandra:5.0
@@ -24,7 +24,7 @@ services:
             timeout: 5s
             retries: 60
         networks:
-            - cassandra
+            - cassandra-network
         ports:
             - "9042:9042"  # Expose native binary CQL port for your apps
         volumes:
@@ -48,7 +48,7 @@ services:
             timeout: 5s
             retries: 60
         networks:
-            - cassandra
+            - cassandra-network
         ports:
             - "9043:9042"  # Expose native binary CQL port for your apps
         volumes:
@@ -56,27 +56,13 @@ services:
             - ./etc/cass2:/etc/cassandra    # Use your own config files for full control
         environment: *environment    # point to "environment" to use the same environment variables as cass1
         depends_on:
-            cass1: # start cass2 only after cass1 is healthy
+            cass1:
                 condition: service_healthy
-    pgadmin:
-        container_name: pgadmin
-        image: dpage/pgadmin4:latest
-        environment:
-            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-            PGADMIN_CONFIG_SERVER_MODE: 'False'
-        volumes:
-            - pgadmin:/var/lib/pgadmin
-        ports:
-            - '5050:80'
-        networks:
-            - db-network
-        restart: unless-stopped
 
 networks:
-    db-network:
+    postgres-network:
         driver: bridge
-    cassandra:
+    cassandra-network:
 volumes:
     postgres:
     pgadmin:

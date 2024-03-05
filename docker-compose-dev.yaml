@@ -26,12 +26,12 @@ services:
         networks:
             - cassandra-network
         ports:
-            - "9042:9042"  # Expose native binary CQL port for your apps
+            - "9042:9042"
         volumes:
             - ./data/cass1:/var/lib/cassandra    # This is the volume that will persist data for cass1 node
             - ./etc/cass1:/etc/cassandra   # Use your own config files for full control
-        environment: &environment    # Declare and save environments variables into "environment"
-            CASSANDRA_SEEDS: "cass1,cass2"    # The first two nodes will be seeds
+        environment: &environment
+            CASSANDRA_SEEDS: "cass1,cass2"
             CASSANDRA_CLUSTER_NAME: SolarSystem
             CASSANDRA_DC: Mars
             CASSANDRA_RACK: West
@@ -50,11 +50,11 @@ services:
         networks:
             - cassandra-network
         ports:
-            - "9043:9042"  # Expose native binary CQL port for your apps
+            - "9043:9042"
         volumes:
             - ./data/cass2:/var/lib/cassandra    # This is the volume that will persist data for cass2 node
             - ./etc/cass2:/etc/cassandra    # Use your own config files for full control
-        environment: *environment    # point to "environment" to use the same environment variables as cass1
+        environment: *environment
         depends_on:
             cass1:
                 condition: service_healthy

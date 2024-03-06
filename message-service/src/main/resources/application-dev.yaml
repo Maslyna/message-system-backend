@@ -2,10 +2,14 @@ spring:
     application:
         name: message-system
     cassandra:
-        keyspace-name: message-system
-        contact-points:
-            - localhost:9042
-            - localhost:9043
+        keyspace-name: "\"message_system\""
+        contact-points: localhost:9042, localhost:9043
         username: ${CASSANDRA_LOGIN_DEV}
         password: ${CASSANDRA_PASSWORD_DEV}
+        local-datacenter: Mars
+
+cassandra:
+    migration:
+        keyspace-name: "\"message_system\""
+
 

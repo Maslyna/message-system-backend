@@ -8,6 +8,10 @@ spring:
         password: ${CASSANDRA_PASSWORD_DEV}
         local-datacenter: Mars
 
+eureka:
+    client:
+        enabled: false
+
 cassandra:
     migration:
         keyspace-name: "\"message_system\""

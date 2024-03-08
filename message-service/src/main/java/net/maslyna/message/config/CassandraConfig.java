@@ -1,12 +1,16 @@
 package net.maslyna.message.config;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.cognitor.cassandra.migration.spring.CassandraMigrationAutoConfiguration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.cassandra.config.DefaultCqlBeanNames;
 import org.springframework.data.cassandra.config.EnableCassandraAuditing;
 
 import java.net.InetSocketAddress;
@@ -32,9 +36,18 @@ public class CassandraConfig { //TODO: extract this into CassandraProperties
     @Value("${spring.cassandra.local-datacenter}")
     private String localDatacenter;
 
-    @Bean
+    //
+    @Bean(DefaultCqlBeanNames.SESSION)
+    @Primary
+// ensure that the keyspace is created if needed before initializing spring-data session
+    @DependsOn(CassandraMigrationAutoConfiguration.MIGRATION_TASK_BEAN_NAME)
+    public CqlSession cassandraSession(CqlSessionBuilder sessionBuilder) {
+        return sessionBuilder.build();
+    }
+
+
+    @Bean(CassandraMigrationAutoConfiguration.CQL_SESSION_BEAN_NAME)
     public CqlSession cassandraMigrationCqlSession() {
-        log.info("contact points = {}", contactPoints);
         return CqlSession.builder()
                 .withKeyspace(keyspace)
                 .addContactPoints(
@@ -46,5 +59,6 @@ public class CassandraConfig { //TODO: extract this into CassandraProperties
                 .withAuthCredentials(username, password)
                 .withLocalDatacenter(localDatacenter)
                 .build();
+
     }
 }

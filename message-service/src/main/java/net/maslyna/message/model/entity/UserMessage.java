@@ -1,7 +1,6 @@
 package net.maslyna.message.model.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
@@ -19,11 +18,9 @@ import java.util.UUID;
 
 @Table("t_user_messages")
 public class UserMessage {
-    @PrimaryKey
-    @Column("user_message_id")
+    @PrimaryKey("user_message_id")
     private UUID messageId;
 
-    @CreatedBy
     @Column("sender_id")
     private UUID sender;
 

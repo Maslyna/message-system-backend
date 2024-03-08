@@ -1,6 +1,6 @@
 package net.maslyna.message.model.entity;
 
-import org.springframework.data.annotation.CreatedBy;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
@@ -10,13 +10,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+
 @Table("t_group_messages")
 public class GroupMessage {
-    @PrimaryKey
-    @Column("group_message_id")
+    @PrimaryKey("group_message_id")
     private UUID messageId;
 
-    @CreatedBy
     @Column("sender_id")
     private UUID sender;
 

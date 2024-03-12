@@ -2,38 +2,24 @@ package net.maslyna.message.config;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import net.maslyna.message.properties.CassandraProperties;
 import org.cognitor.cassandra.migration.spring.CassandraMigrationAutoConfiguration;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.cassandra.config.DefaultCqlBeanNames;
-import org.springframework.data.cassandra.config.EnableCassandraAuditing;
+import org.springframework.data.cassandra.config.EnableReactiveCassandraAuditing;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 
 @Configuration
-@Slf4j
-@EnableCassandraAuditing
+@EnableReactiveCassandraAuditing
+@RequiredArgsConstructor
 public class CassandraConfig { //TODO: extract this into CassandraProperties
 
-    @Value("${spring.cassandra.keyspace-name}")
-    private String keyspace;
-
-    @Value("${spring.cassandra.contact-points}")
-    private List<String> contactPoints;
-
-    @Value("${spring.cassandra.username}")
-    private String username;
-
-    @Value("${spring.cassandra.password}")
-    private String password;
-
-    @Value("${spring.cassandra.local-datacenter}")
-    private String localDatacenter;
+    private final CassandraProperties properties;
 
     //
     @Bean(DefaultCqlBeanNames.SESSION)
@@ -48,15 +34,15 @@ public class CassandraConfig { //TODO: extract this into CassandraProperties
     @Bean(CassandraMigrationAutoConfiguration.CQL_SESSION_BEAN_NAME)
     public CqlSession cassandraMigrationCqlSession() {
         return CqlSession.builder()
-                .withKeyspace(keyspace)
+                .withKeyspace(properties.getKeyspaceName())
                 .addContactPoints(
-                        contactPoints.stream().map(str -> {
+                        properties.getContactPoints().stream().map(str -> {
                             String[] address = str.split(":");
                             return InetSocketAddress.createUnresolved(address[0], Integer.parseInt(address[1]));
                         }).toList()
                 )
-                .withAuthCredentials(username, password)
-                .withLocalDatacenter(localDatacenter)
+                .withAuthCredentials(properties.getUsername(), properties.getPassword())
+                .withLocalDatacenter(properties.getLocalDatacenter())
                 .build();
 
     }

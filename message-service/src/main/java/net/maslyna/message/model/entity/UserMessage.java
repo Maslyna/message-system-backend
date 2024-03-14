@@ -21,10 +21,10 @@ public class UserMessage {
     @PrimaryKey("user_message_id")
     private UUID messageId;
 
-    @Column("sender_id")
+    @PrimaryKey("sender_id")
     private UUID sender;
 
-    @Column("receiver_id")
+    @PrimaryKey("receiver_id")
     private UUID receiver;
 
     @Column("content")

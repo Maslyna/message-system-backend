@@ -17,14 +17,11 @@ import java.net.InetSocketAddress;
 @Configuration
 @EnableReactiveCassandraAuditing
 @RequiredArgsConstructor
-public class CassandraConfig { //TODO: extract this into CassandraProperties
-
+public class CassandraConfig {
     private final CassandraProperties properties;
 
-    //
     @Bean(DefaultCqlBeanNames.SESSION)
     @Primary
-// ensure that the keyspace is created if needed before initializing spring-data session
     @DependsOn(CassandraMigrationAutoConfiguration.MIGRATION_TASK_BEAN_NAME)
     public CqlSession cassandraSession(CqlSessionBuilder sessionBuilder) {
         return sessionBuilder.build();

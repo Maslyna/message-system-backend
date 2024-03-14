@@ -7,8 +7,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,33 +15,26 @@ import java.util.UUID;
 @Getter
 @Setter
 
-@Table("t_group_messages")
-public class GroupMessage {
-    @PrimaryKey("group_message_id")
-    private UUID messageId;
-
+@Table("t_groups")
+public class Group {
     @PrimaryKey("group_id")
     private UUID groupId;
 
-    @Column("sender_id")
-    private UUID sender;
+    @Column("creator_id")
+    private UUID creator;
 
-    @Column("content")
-    private String content;
+    @Column("members_ids")
+    @Builder.Default
+    private Set<UUID> members = new HashSet<>();
 
-    @Column("file_ids")
-    private List<UUID> files;
+    @Column("admins_ids")
+    @Builder.Default
+    private Set<UUID> admins = new HashSet<>();
 
-    @Column("viewed_by_users")
-    private List<UUID> viewedBy;
+    @Column("images_ids")
+    private List<UUID> images = new ArrayList<>();
 
-    @Column("deleted")
-    private boolean deleted;
-
-    @Column("edited")
-    private boolean edited;
-
-    @CreatedDate
     @Column("created_at")
+    @CreatedDate
     private LocalDateTime createdAt;
 }

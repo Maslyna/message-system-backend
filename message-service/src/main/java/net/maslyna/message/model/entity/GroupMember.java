@@ -1,33 +1,31 @@
 package net.maslyna.message.model.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.UUID;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
 
-@Table("t_groups")
-public class Group {
+@Table("t_group_members")
+public class GroupMember {
     @PrimaryKey("group_id")
     private UUID groupId;
 
-    @Column("creator_id")
-    private UUID creator;
+    @PrimaryKey("member_id")
+    private UUID memberId;
 
-    @Column("images_ids")
-    @Builder.Default
-    private List<UUID> images = new ArrayList<>();
-
-    @Column("created_at")
     @CreatedDate
-    private LocalDateTime createdAt;
+    @Column("joined_at")
+    private LocalDateTime joinedAt;
 }

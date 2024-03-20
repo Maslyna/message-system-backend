@@ -29,7 +29,7 @@ public class CassandraConfig {
 
 
     @Bean(CassandraMigrationAutoConfiguration.CQL_SESSION_BEAN_NAME)
-    public CqlSession cassandraMigrationCqlSession() {
+    public CqlSession cassandraMigrationCqlSession() { // only for migrations
         return CqlSession.builder()
                 .withKeyspace(properties.getKeyspaceName())
                 .addContactPoints(

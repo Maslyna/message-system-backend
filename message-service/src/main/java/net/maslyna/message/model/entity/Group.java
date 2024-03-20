@@ -7,7 +7,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,9 +23,14 @@ public class Group {
     @Column("creator_id")
     private UUID creator;
 
-    @Column("images_ids")
-    @Builder.Default
-    private List<UUID> images = new ArrayList<>();
+    @Column("group_name")
+    private String name;
+
+    @Column("group_description")
+    private String description;
+
+    @Column("is_public")
+    private boolean isPublic;
 
     @Column("created_at")
     @CreatedDate

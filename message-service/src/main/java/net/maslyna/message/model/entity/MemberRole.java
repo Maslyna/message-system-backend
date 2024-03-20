@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 
 @Table("t_group_members_roles")
-public class GroupRole {
+public class MemberRole {
     @PrimaryKey("group_id")
     private UUID groupId;
 
@@ -28,4 +28,7 @@ public class GroupRole {
 
     @Column("role_name")
     private String name;
+
+    @Column("role_description")
+    private String description;
 }

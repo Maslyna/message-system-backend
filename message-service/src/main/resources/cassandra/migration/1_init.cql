@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS t_groups
 (
-    group_id   UUID,
-    creator_id UUID,
-    images     list<UUID>,
-    created_at TIMESTAMP,
-    PRIMARY KEY ( group_id, creator_id )
+    group_id          UUID,
+    creator_id        UUID,
+    group_description TEXT,
+    created_at        TIMESTAMP,
+    PRIMARY KEY ((creator_id), group_id)
 );
 
 CREATE TABLE IF NOT EXISTS t_group_members
@@ -12,17 +12,18 @@ CREATE TABLE IF NOT EXISTS t_group_members
     group_id  UUID,
     member_id UUID,
     joined_at TIMESTAMP,
-    PRIMARY KEY ( group_id, member_id )
+    PRIMARY KEY ((group_id), member_id)
 );
 
 CREATE TABLE IF NOT EXISTS t_group_members_roles
 (
-    group_id   UUID,
-    member_id  UUID,
-    role_level SMALLINT,
-    is_super   BOOLEAN,
-    role_name  TEXT,
-    PRIMARY KEY ( group_id, member_id )
+    group_id         UUID,
+    member_id        UUID,
+    role_level       SMALLINT,
+    is_super         BOOLEAN,
+    role_name        TEXT,
+    role_description TEXT,
+    PRIMARY KEY ((group_id), member_id )
 );
 
 CREATE TABLE IF NOT EXISTS t_group_messages

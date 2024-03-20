@@ -2,7 +2,9 @@ CREATE TABLE IF NOT EXISTS t_groups
 (
     group_id          UUID,
     creator_id        UUID,
+    group_name        TEXT,
     group_description TEXT,
+    is_public         BOOLEAN,
     created_at        TIMESTAMP,
     PRIMARY KEY ((creator_id), group_id)
 );

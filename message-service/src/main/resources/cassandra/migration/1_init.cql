@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS t_groups
     group_description TEXT,
     is_public         BOOLEAN,
     created_at        TIMESTAMP,
-    PRIMARY KEY ((creator_id), group_id)
+    PRIMARY KEY ((group_id))
 );
 
 CREATE TABLE IF NOT EXISTS t_group_members

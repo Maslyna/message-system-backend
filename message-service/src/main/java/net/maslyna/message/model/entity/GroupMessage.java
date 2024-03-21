@@ -2,8 +2,9 @@ package net.maslyna.message.model.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
@@ -18,10 +19,10 @@ import java.util.UUID;
 
 @Table("t_group_messages")
 public class GroupMessage {
-    @PrimaryKey("group_message_id")
+    @PrimaryKeyColumn(name = "group_message_id", type = PrimaryKeyType.PARTITIONED, ordinal = 1)
     private UUID messageId;
 
-    @PrimaryKey("group_id")
+    @PrimaryKeyColumn(name = "group_id", type = PrimaryKeyType.PARTITIONED, ordinal = 2)
     private UUID groupId;
 
     @Column("sender_id")

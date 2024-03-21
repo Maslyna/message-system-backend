@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
@@ -19,10 +20,10 @@ import java.util.UUID;
 
 @Table("t_group_members")
 public class GroupMember {
-    @PrimaryKey("group_id")
+    @PrimaryKeyColumn(name = "group_id", type = PrimaryKeyType.PARTITIONED, ordinal = 1)
     private UUID groupId;
 
-    @PrimaryKey("member_id")
+    @PrimaryKeyColumn(name = "member_id", type = PrimaryKeyType.PARTITIONED, ordinal = 2)
     private UUID memberId;
 
     @CreatedDate

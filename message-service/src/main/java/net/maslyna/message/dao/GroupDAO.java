@@ -51,6 +51,7 @@ public class GroupDAO {
 //                    if (!exists) {
 //                        return Mono.error(() -> new GroupNotFoundException(STR."Group with id = \{groupId} not found"));
 //                    }
-//                })
+//                    return Mono.empty();
+//                }).then(groupRepository)
 //    }
 }

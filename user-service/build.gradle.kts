@@ -1,5 +1,6 @@
 val springBootVersion = "3.2.1"
-val eurekaClientVersion = "4.1.0"
+val eurekaClientVersion = "4.1.1"
+val loadBalancerVersion = eurekaClientVersion
 
 plugins {
     id("java")
@@ -24,6 +25,7 @@ dependencies {
     implementation("org.postgresql:r2dbc-postgresql")
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${eurekaClientVersion}")
+    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer:${loadBalancerVersion}")
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

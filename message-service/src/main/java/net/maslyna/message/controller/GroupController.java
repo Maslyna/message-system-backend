@@ -26,7 +26,7 @@ public class GroupController {
     }
 
     @PostMapping()
-    private Mono<UUID> create(@RequestHeader("userId") UUID user, @Valid @RequestBody CreateGroup body) {
-        return Mono.empty();
+    private Mono<UUID> create(@RequestHeader("userId") UUID user, @Valid @RequestBody CreateGroup settings) {
+        return service.create(user, settings);
     }
 }

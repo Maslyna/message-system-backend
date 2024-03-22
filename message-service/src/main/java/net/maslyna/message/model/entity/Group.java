@@ -1,5 +1,6 @@
 package net.maslyna.message.model.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 
 @Data
+@Builder
 @Table("t_groups")
 public class Group {
     @PrimaryKey("group_id")

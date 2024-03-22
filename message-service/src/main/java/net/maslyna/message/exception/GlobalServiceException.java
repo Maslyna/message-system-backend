@@ -11,4 +11,6 @@ public class GlobalServiceException extends ResponseStatusException {
     public GlobalServiceException(HttpStatusCode status, String reason) {
         super(status, reason);
     }
+
+
 }

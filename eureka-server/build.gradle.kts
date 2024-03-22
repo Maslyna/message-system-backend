@@ -1,4 +1,5 @@
-val eurekaServerVersion = "4.1.0"
+val eurekaServerVersion = "4.1.1"
+val loadBalancerVersion = "4.1.1"
 
 plugins {
     id("java")
@@ -15,6 +16,8 @@ repositories {
 
 dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:${eurekaServerVersion}")
+    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer:${loadBalancerVersion}")
+
 }
 
 tasks.test {

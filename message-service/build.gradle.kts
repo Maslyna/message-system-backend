@@ -1,5 +1,6 @@
 val springBootVersion = "3.2.1"
-val eurekaClientVersion = "4.1.0"
+val eurekaClientVersion = "4.1.1"
+val loadBalancerVersion = "4.1.1"
 
 plugins {
     id("java")
@@ -19,6 +20,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.data:spring-data-cassandra")
+    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer:${loadBalancerVersion}")
 
     implementation("org.cognitor.cassandra:cassandra-migration:2.6.1_v4")
     implementation("org.cognitor.cassandra:cassandra-migration-spring-boot-starter:2.6.1_v4")

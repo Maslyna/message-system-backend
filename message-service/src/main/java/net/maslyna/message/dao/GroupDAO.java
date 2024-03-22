@@ -3,6 +3,7 @@ package net.maslyna.message.dao;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.maslyna.message.exception.GroupNotFoundException;
+import net.maslyna.message.exception.UserNotFoundException;
 import net.maslyna.message.model.entity.Group;
 import net.maslyna.message.model.entity.GroupMember;
 import net.maslyna.message.model.entity.MemberRole;
@@ -45,13 +46,11 @@ public class GroupDAO {
                 });
     }
 
-//    public Mono<MemberRole> getRole(final UUID groupId, final UUID memberId) {
-//        return groupRepository.existsById(groupId)
-//                .flatMap(exists -> {
-//                    if (!exists) {
-//                        return Mono.error(() -> new GroupNotFoundException(STR."Group with id = \{groupId} not found"));
-//                    }
-//                    return Mono.empty();
-//                }).then(groupRepository)
-//    }
+    public Mono<MemberRole> getRole(final UUID groupId, final UUID memberId) {
+        return roleRepository.findMemberBy(groupId, memberId)
+                .switchIfEmpty(
+                        Mono.error(() -> new UserNotFoundException(
+                                STR."User with id = \{memberId} or group with id = \{groupId} not found")
+                        ));
+    }
 }

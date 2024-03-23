@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Component
 public class UserServiceClient {
@@ -18,14 +20,12 @@ public class UserServiceClient {
     private final ReactorLoadBalancerExchangeFilterFunction lbFunction;
 
 
-    public Mono<Boolean> isUserExists() {
+    public Mono<Boolean> isUserExists(final UUID userId) {
         return client.filter(lbFunction).build().get()
                 .uri("http://user-service/api/v1/users/{userId}/exists")
                 .accept(MediaType.APPLICATION_JSON)
-                .retrieve().onStatus(HttpStatusCode::isError, response -> {
-                    return response.bodyToMono(ProblemDetail.class)
-                            .map(error -> new GlobalServiceException(HttpStatus.valueOf(error.getStatus()), error.getDetail()));
-                })
+                .retrieve().onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ProblemDetail.class)
+                        .map(error -> new GlobalServiceException(HttpStatus.valueOf(error.getStatus()), error.getDetail())))
                 .bodyToMono(Boolean.class);
     }
 }

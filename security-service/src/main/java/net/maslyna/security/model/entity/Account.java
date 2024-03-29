@@ -33,7 +33,7 @@ public class Account implements UserDetails {
     @Builder.Default
     private boolean credentialsNonExpired = false;
     @Builder.Default
-    private boolean enabled = false;
+    private boolean enabled = true;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Set.of(role);

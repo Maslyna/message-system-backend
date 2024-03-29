@@ -3,6 +3,7 @@ package net.maslyna.message.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.maslyna.message.model.dto.GroupDTO;
+import net.maslyna.message.model.entity.Group;
 import net.maslyna.message.model.request.CreateGroup;
 import net.maslyna.message.service.GroupService;
 import org.springframework.data.domain.Page;
@@ -21,12 +22,12 @@ public class GroupController {
     private final GroupService service;
 
     @GetMapping()
-    private Mono<Page<GroupDTO>> groups(@RequestHeader("userId") UUID user) {
+    public Mono<Page<GroupDTO>> groups(@RequestHeader("userId") UUID user) {
         return Mono.empty();
     }
 
-    @PostMapping()
-    private Mono<UUID> create(@RequestHeader("userId") UUID user, @Valid @RequestBody CreateGroup settings) {
-        return service.create(user, settings);
-    }
+//    @PostMapping()
+//    public Mono<UUID> create(@RequestHeader("userId") UUID user, @Valid @RequestBody CreateGroup settings) {
+//        return service.create(user, settings).map(Group::getGroupId);
+//    }
 }

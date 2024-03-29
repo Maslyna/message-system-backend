@@ -1,6 +1,6 @@
 val springBootVersion = "3.2.1"
-val eurekaClientVersion = "4.1.1"
-val loadBalancerVersion = "4.1.1"
+val eurekaClientVersion = "4.1.0"
+val loadBalancerVersion = eurekaClientVersion
 
 plugins {
     id("java")

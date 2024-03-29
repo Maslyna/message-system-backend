@@ -86,6 +86,10 @@ public class UserService {
                 .then(settingService.delete(id)).then();
     }
 
+    public Mono<Boolean> exists(final UUID id) {
+        return userRepository.existsById(id);
+    }
+
     @Transactional
     public Mono<User> update(final UUID id, final UserUpdateDTO body) {
         if (id == null) {

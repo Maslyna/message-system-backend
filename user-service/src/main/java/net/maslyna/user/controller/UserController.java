@@ -34,16 +34,21 @@ public class UserController {
     }
 
     @DeleteMapping
-    public Mono<ResponseEntity<Void>> delete(@RequestHeader("userId") UUID authenticatedUser) {
-        return userService.delete(authenticatedUser)
+    public Mono<ResponseEntity<Void>> delete(@RequestHeader("userId") UUID userId) {
+        return userService.delete(userId)
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
     }
 
     @PutMapping
-    public Mono<ResponseEntity<UserDTO>> update(@RequestHeader("userId") UUID authenticatedUser,
+    public Mono<ResponseEntity<UserDTO>> update(@RequestHeader("userId") UUID userId,
                                                 @Valid @RequestBody UserUpdateDTO body) {
-        return userService.update(authenticatedUser, body)
+        return userService.update(userId, body)
                 .map(mapper::userToUserDto)
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK));
+    }
+
+    @GetMapping("/{userId}/exists")
+    public Mono<Boolean> exists(@PathVariable("userId") UUID userId) {
+        return userService.exists(userId);
     }
 }

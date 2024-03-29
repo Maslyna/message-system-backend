@@ -2,18 +2,23 @@ spring:
     application:
         name: message-system
     cassandra:
-        keyspace-name: "\"message_system\""
-        contact-points: localhost:9042, localhost:9043
-        username: ${CASSANDRA_LOGIN_DEV}
-        password: ${CASSANDRA_PASSWORD_DEV}
-        local-datacenter: Mars
+        keyspace-name: ${DEV_CASSANDRA_KEYSPACE:"message_system"}
+        contact-points: ${DEV_CASSANDRA_CONTACT_POINTS:localhost:9042}
+        username: ${CASSANDRA_LOGIN_DEV:cassandra}
+        password: ${CASSANDRA_PASSWORD_DEV:cassandra}
+        local-datacenter: ${DEV_CASSANDRA_LOCAL_DATACENTER:Mars}
+
 
 eureka:
     client:
-        enabled: false
+        enabled: true
+        service-url:
+            defaultZone: ${DEV_EUREKA_URL:http://localhost:8761/eureka}
 
 cassandra:
     migration:
-        keyspace-name: "\"message_system\""
+        keyspace-name: ${DEV_CASSANDRA_KEYSPACE:"message_system"}
 
+server:
+    port: 8100
 

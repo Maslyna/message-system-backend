@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-import static java.lang.StringTemplate.STR;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class GroupDAO {
 
     public Mono<Group> getGroup(final UUID groupId) {
         return groupRepository.findById(groupId)
-                .switchIfEmpty(Mono.error(() -> new GroupNotFoundException(STR."Group with id = \{groupId} not found")));
+                .switchIfEmpty(Mono.error(() -> new GroupNotFoundException("Group with id = %s not found".formatted(groupId))));
     }
 
     public Mono<Group> save(final @Valid Group group) {
@@ -40,7 +39,7 @@ public class GroupDAO {
         return groupRepository.existsById(groupId)
                 .flatMapMany(exists -> {
                     if (!exists) {
-                        return Flux.error(() -> new GroupNotFoundException(STR."Group with id = \{groupId} not found"));
+                        return Flux.error(() -> new GroupNotFoundException("Group with id = %s not found".formatted(groupId)));
                     }
                     return memberRepository.findAllByGroupId(groupId);
                 });
@@ -50,7 +49,7 @@ public class GroupDAO {
         return roleRepository.findMemberBy(groupId, memberId)
                 .switchIfEmpty(
                         Mono.error(() -> new UserNotFoundException(
-                                STR."User with id = \{memberId} or group with id = \{groupId} not found")
+                                "User with id = %s or group with id = %s not found".formatted(memberId, groupId))
                         ));
     }
 }

@@ -44,7 +44,7 @@ public class UserService {
                             .username(username)
                             .build();
 
-                    return template.insert(user)
+                    return userRepository.save(user)
                             .flatMap(savedUser -> settingService.save(id)
                                     .thenReturn(savedUser));
                 });

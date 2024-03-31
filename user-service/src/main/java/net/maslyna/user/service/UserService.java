@@ -44,7 +44,7 @@ public class UserService {
                             .username(username)
                             .build();
 
-                    return template.insert(user)//TODO: rewrite with entity template
+                    return template.insert(user)
                             .flatMap(savedUser -> settingService.save(id)
                                     .thenReturn(savedUser));
                 });

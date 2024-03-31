@@ -27,10 +27,12 @@ public class User {
     private String username;
 
     @Column("bio")
-    private String bio;
+    @Builder.Default
+    private String bio = "";
 
     @Column("status")
-    private String status;
+    @Builder.Default
+    private String status = "";
 
     @Column("last_login")
     private LocalDateTime lastLogin;

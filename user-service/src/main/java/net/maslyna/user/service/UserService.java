@@ -9,6 +9,7 @@ import net.maslyna.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final R2dbcEntityTemplate template;
     private final SettingService settingService;
 
     @Transactional
@@ -42,7 +44,7 @@ public class UserService {
                             .username(username)
                             .build();
 
-                    return userRepository.save(user) //TODO: rewrite with entity template
+                    return template.insert(user)//TODO: rewrite with entity template
                             .flatMap(savedUser -> settingService.save(id)
                                     .thenReturn(savedUser));
                 });

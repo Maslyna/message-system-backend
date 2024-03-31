@@ -1,7 +1,6 @@
 package net.maslyna.security.client;
 
 import lombok.RequiredArgsConstructor;
-import net.maslyna.security.client.exception.UserRegistrationException;
 import net.maslyna.security.client.model.UserRegistrationDto;
 import net.maslyna.security.client.property.ClientProperties;
 import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;

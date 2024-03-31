@@ -27,7 +27,7 @@ public class AuthenticationHandler {
                 .flatMap(token -> ServerResponse.ok()
                         .header(HttpHeaders.AUTHORIZATION, securityProperties.getJwtPrefix() + token)
                         .build())
-                .onErrorResume(GlobalSecurityServiceException.class, handlerService::createResponse);
+                .onErrorResume(GlobalSecurityServiceException.class, handlerService::createErrorResponse);
     }
 
     public Mono<ServerResponse> validate(final ServerRequest request) {
@@ -35,6 +35,6 @@ public class AuthenticationHandler {
         return authenticationService.validate(authHeader)
                 .map(mapper::accountToAccountResponse)
                 .flatMap(body -> handlerService.createResponse(HttpStatus.OK, body))
-                .onErrorResume(GlobalSecurityServiceException.class, handlerService::createResponse);
+                .onErrorResume(GlobalSecurityServiceException.class, handlerService::createErrorResponse);
     }
 }

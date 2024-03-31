@@ -42,7 +42,7 @@ public class UserService {
                             .username(username)
                             .build();
 
-                    return userRepository.save(user)
+                    return userRepository.save(user) //TODO: rewrite with entity template
                             .flatMap(savedUser -> settingService.save(id)
                                     .thenReturn(savedUser));
                 });

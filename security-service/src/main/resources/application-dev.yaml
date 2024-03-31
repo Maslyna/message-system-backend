@@ -29,4 +29,4 @@ server:
     port: 8080
 
 client:
-    user-service-url: http://user-service
+    user-service-base-url: http://user-service

@@ -1,7 +1,5 @@
 package net.maslyna.security.service;
 
-import java.util.Base64;
-
 public interface BasicService {
     String extractDecodedBasic(String authHeader);
 

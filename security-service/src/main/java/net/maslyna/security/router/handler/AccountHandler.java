@@ -8,6 +8,7 @@ import net.maslyna.security.service.AccountService;
 import net.maslyna.security.util.ObjectValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -24,6 +25,7 @@ public class AccountHandler {
                 .flatMap(validator::validate)
                 .flatMap(req -> accountService.save(req.email(), req.password()))
                 .flatMap(account -> handlerService.createResponse(HttpStatus.CREATED, account))
-                .onErrorResume(GlobalSecurityServiceException.class, handlerService::createResponse);
+                .onErrorResume(WebClientResponseException.class, handlerService::createErrorResponse)
+                .onErrorResume(GlobalSecurityServiceException.class, handlerService::createErrorResponse);
     }
 }

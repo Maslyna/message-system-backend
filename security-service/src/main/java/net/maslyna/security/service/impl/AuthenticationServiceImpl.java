@@ -3,7 +3,6 @@ package net.maslyna.security.service.impl;
 import lombok.RequiredArgsConstructor;
 import net.maslyna.security.exception.AccessDeniedException;
 import net.maslyna.security.exception.AccountNotFoundException;
-import net.maslyna.security.exception.GlobalSecurityServiceException;
 import net.maslyna.security.model.entity.Account;
 import net.maslyna.security.service.AccountService;
 import net.maslyna.security.service.AuthenticationService;

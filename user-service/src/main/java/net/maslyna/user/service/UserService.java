@@ -24,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final R2dbcEntityTemplate template;
     private final SettingService settingService;
 
     @Transactional

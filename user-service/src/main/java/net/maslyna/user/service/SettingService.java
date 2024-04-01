@@ -23,6 +23,7 @@ public class SettingService {
     public Mono<UserSettings> save(final UUID userId) {
         final UserSettings settings = new UserSettings();
         settings.setId(userId);
+        settings.setNew(true);
         return repository.save(settings);
     }
 
@@ -30,7 +31,7 @@ public class SettingService {
         if (userId == null)
             return Mono.error(new IllegalArgumentException("userId must not be null"));
 
-        return repository.findById(userId)
+        return repository.findByUserId(userId)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("user with userId = %s not found".formatted(userId))));
     }
 

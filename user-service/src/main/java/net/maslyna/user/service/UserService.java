@@ -9,7 +9,9 @@ import net.maslyna.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -40,9 +42,10 @@ public class UserService {
                             .id(id)
                             .email(email)
                             .username(username)
+                            .isNew(true)
                             .build();
 
-                    return userRepository.save(user) //TODO: rewrite with entity template
+                    return userRepository.save(user)
                             .flatMap(savedUser -> settingService.save(id)
                                     .thenReturn(savedUser));
                 });

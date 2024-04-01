@@ -2,6 +2,8 @@ package net.maslyna.user.model.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -14,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 
 @Table("t_user_settings")
-public class UserSettings {
+public class UserSettings implements Persistable<UUID> {
     @Id
     @Column("user_id")
     private UUID id;
@@ -42,4 +44,8 @@ public class UserSettings {
     @Column("receive_messages")
     @Builder.Default
     private boolean receiveMessages = true;
+
+    @Transient
+    @Builder.Default
+    private boolean isNew = false;
 }

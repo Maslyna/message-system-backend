@@ -31,7 +31,7 @@ public class SettingService {
         if (userId == null)
             return Mono.error(new IllegalArgumentException("userId must not be null"));
 
-        return repository.findByUserId(userId)
+        return repository.findById(userId)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("user with userId = %s not found".formatted(userId))));
     }
 

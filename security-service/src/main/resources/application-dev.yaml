@@ -30,3 +30,4 @@ server:
 
 client:
     user-service-base-url: http://user-service
+    base-user-agent: security-service

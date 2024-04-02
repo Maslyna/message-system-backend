@@ -22,3 +22,7 @@ security:
     role-key: ${SECURITY_JWT_ROLE_KEY}
     secret-key: ${SECURITY_JWT_PREFIX}
     token-live-time: ${SECURITY_JWT_LIVETIME}
+
+client:
+    user-service-base-url: http://user-service
+    base-user-agent: ${SECURITY_SERVICE_NAME}

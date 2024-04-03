@@ -24,7 +24,7 @@ public class AccountHandler {
         return request.bodyToMono(RegistrationRequest.class)
                 .flatMap(validator::validate)
                 .flatMap(req -> accountService.save(req.email(), req.password()))
-                .flatMap(account -> handlerService.createResponse(HttpStatus.CREATED, account))
+                .flatMap(account -> handlerService.createResponse(HttpStatus.CREATED))
                 .onErrorResume(WebClientResponseException.class, handlerService::createErrorResponse)
                 .onErrorResume(GlobalSecurityServiceException.class, handlerService::createErrorResponse);
     }

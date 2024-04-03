@@ -25,19 +25,39 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder encoder;
     private final UserServiceClient client;
 
+//    @Override
+//    @Transactional
+//    public Mono<Account> save(final String username, final String password) {
+//        return repository.existsByUsername(username)
+//                .flatMap(exists -> {
+//                    if (exists) {
+//                        return Mono.error(new AccountAlreadyExistsException("account with username = '%s' already exists".formatted(username)));
+//                    }
+//                    Mono<Account> account = repository.save(createUser(username, password));
+//                    return account.flatMap(a -> {
+//                        UserRegistrationDto dto = new UserRegistrationDto(a.getId(), a.getUsername(), a.getUsername());
+//                        return client.registration(dto);
+//                    })
+//                });
+//    }
+
     @Override
     @Transactional
-    public Mono<Account> save(final String username, final String password) {
+    public Mono<Account> save(final String username, final String password) { //Looks like a piece of junk
         return repository.existsByUsername(username)
+                .log()
                 .flatMap(exists -> {
                     if (exists) {
-                        return Mono.error(new AccountAlreadyExistsException("account with username = '%s' already exists".formatted(username)));
+                        return Mono.error(new AccountAlreadyExistsException("account with email = '%s' already exists".formatted(username)));
                     }
-                    Mono<Account> account = repository.save(createUser(username, password));
-                    return account.flatMap(a -> {
-                        UserRegistrationDto dto = new UserRegistrationDto(a.getId(), a.getUsername(), a.getUsername());
-                        return client.registration(dto);
-                    }).then(account);
+                    Account newUser = createUser(username, password);
+                    Mono<Account> createUser = repository.save(newUser);
+                    Mono<Void> registration = createUser.flatMap(a -> {
+                        newUser.setId(a.getId());
+                        var userRegistration = new UserRegistrationDto(a.getId(), a.getUsername(), a.getUsername());
+                        return client.registration(userRegistration);
+                    });
+                    return registration.thenReturn(newUser);
                 });
     }
 

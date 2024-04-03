@@ -45,7 +45,6 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Mono<Account> save(final String username, final String password) { //Looks like a piece of junk
         return repository.existsByUsername(username)
-                .log()
                 .flatMap(exists -> {
                     if (exists) {
                         return Mono.error(new AccountAlreadyExistsException("account with email = '%s' already exists".formatted(username)));

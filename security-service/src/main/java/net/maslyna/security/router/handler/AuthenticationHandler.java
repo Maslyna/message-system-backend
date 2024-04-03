@@ -25,7 +25,7 @@ public class AuthenticationHandler {
         final String authHeader = request.headers().firstHeader(HttpHeaders.AUTHORIZATION);
         return authenticationService.login(authHeader)
                 .flatMap(token -> ServerResponse.ok()
-                        .header(HttpHeaders.AUTHORIZATION, securityProperties.getJwtPrefix() + token)
+                        .header(HttpHeaders.AUTHORIZATION, securityProperties.jwtPrefix() + token)
                         .build())
                 .onErrorResume(GlobalSecurityServiceException.class, handlerService::createErrorResponse);
     }

@@ -1,16 +1,18 @@
 package net.maslyna.security.property;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
-@Data
-@Component
 @ConfigurationProperties(prefix = "security")
-public class SecurityProperties {
-    private String jwtPrefix;
-    private String basicPrefix;
-    private String roleKey;
-    private String secretKey;
-    private Long tokenLiveTime;
+public record SecurityProperties (
+    String jwtPrefix,
+    String basicPrefix,
+    String roleKey,
+    String secretKey,
+    Long tokenLiveTime
+) {
+    @ConstructorBinding
+    public SecurityProperties {
+
+    }
 }

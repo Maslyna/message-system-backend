@@ -27,8 +27,8 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String extractToken(final String authHeader) {
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith(securityProperties.getJwtPrefix())) {
-            return authHeader.substring(securityProperties.getJwtPrefix().length());
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(securityProperties.jwtPrefix())) {
+            return authHeader.substring(securityProperties.jwtPrefix().length());
         }
         return null;
     }
@@ -49,10 +49,10 @@ public class JwtServiceImpl implements JwtService {
                 .subject(username)
                 .issuer("spring.webflux.test")
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + securityProperties.getTokenLiveTime()))
+                .expiration(new Date(System.currentTimeMillis() + securityProperties.tokenLiveTime()))
                 .add(extraClaims);
         if (!authorities.isEmpty()) {
-            claimsBuilder.add(securityProperties.getRoleKey(), authorities.stream()
+            claimsBuilder.add(securityProperties.roleKey(), authorities.stream()
                     .map(GrantedAuthority::getAuthority).collect(joining(",")));
         }
 
@@ -77,7 +77,6 @@ public class JwtServiceImpl implements JwtService {
         try {
             Jws<Claims> claims = Jwts.parser().verifyWith(this.secretKey)
                     .build().parseSignedClaims(token);
-            // parseClaimsJws will check expiration date. No need do here.
             log.debug("expiration date: {}", claims.getPayload().getExpiration());
             return true;
         } catch (JwtException | IllegalArgumentException e) {

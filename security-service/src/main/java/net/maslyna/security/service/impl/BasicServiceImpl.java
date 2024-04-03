@@ -15,8 +15,8 @@ public class BasicServiceImpl implements BasicService {
 
     @Override
     public String extractDecodedBasic(String authHeader) {
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith(properties.getBasicPrefix())) {
-            return decodeBasic(authHeader.substring(properties.getBasicPrefix().length()));
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(properties.basicPrefix())) {
+            return decodeBasic(authHeader.substring(properties.basicPrefix().length()));
         }
         return null;
     }

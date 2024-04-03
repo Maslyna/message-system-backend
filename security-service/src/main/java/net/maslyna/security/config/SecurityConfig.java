@@ -64,7 +64,7 @@ public class SecurityConfig {
     @Bean
     public SecretKey secretKey(SecurityProperties securityProperties) {
         String secret = Base64.getEncoder().encodeToString(
-                securityProperties.getSecretKey().getBytes(StandardCharsets.UTF_8)
+                securityProperties.secretKey().getBytes(StandardCharsets.UTF_8)
         );
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }

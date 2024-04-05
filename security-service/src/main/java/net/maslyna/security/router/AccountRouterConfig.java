@@ -20,6 +20,7 @@ public class AccountRouterConfig {
     public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions.route()
                 .POST("/api/v1/registration", accept(MediaType.APPLICATION_JSON), handler::createAccount)
+                .DELETE("/api/v1/account", handler::deleteAccount)
                 .build();
     }
 }

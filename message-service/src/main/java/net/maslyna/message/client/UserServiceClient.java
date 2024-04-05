@@ -1,31 +1,30 @@
 package net.maslyna.message.client;
 
-import lombok.RequiredArgsConstructor;
-import net.maslyna.message.exception.GlobalServiceException;
-import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ProblemDetail;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Component
 public class UserServiceClient {
-    private final WebClient.Builder client;
-    private final ReactorLoadBalancerExchangeFilterFunction lbFunction;
+    private final WebClient client;
 
+    public UserServiceClient(@Qualifier("userServiceWebClientBean") WebClient client) {
+        this.client = client;
+    }
 
-    public Mono<Boolean> isUserExists(final UUID userId) {
-        return client.filter(lbFunction).build().get()
-                .uri("http://user-service/api/v1/users/{userId}/exists")
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve().onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ProblemDetail.class)
-                        .map(error -> new GlobalServiceException(HttpStatus.valueOf(error.getStatus()), error.getDetail())))
-                .bodyToMono(Boolean.class);
+    public Mono<Boolean> userExists(final UUID userId) {
+        return client.get()
+                .uri(builder -> builder
+                        .path("/api/v1/users/{userId}/exists")
+                        .build(userId))
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is2xxSuccessful()) {
+                        return response.bodyToMono(Boolean.class);
+                    }
+                    return response.createError();
+                });
     }
 }

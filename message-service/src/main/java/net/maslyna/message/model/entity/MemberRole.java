@@ -25,7 +25,7 @@ public class MemberRole {
     private UUID memberId;
 
     @Column("is_super")
-    private UUID isSuper;
+    private boolean isSuper;
 
     @Column("role_name")
     private String name;

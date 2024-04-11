@@ -35,6 +35,18 @@ public class GroupDAO {
         return groupRepository.save(group);
     }
 
+    public Mono<MemberRole> saveRole(final MemberRole role) {
+        return roleRepository.save(role);
+    }
+
+    public Mono<GroupMember> saveMember(final GroupMember member) {
+        return memberRepository.save(member);
+    }
+
+    public Flux<GroupMember> saveMembers(final Iterable<GroupMember> members) {
+        return memberRepository.saveAll(members);
+    }
+
     public Flux<GroupMember> getMembers(final UUID groupId) {
         return groupRepository.existsById(groupId)
                 .flatMapMany(exists -> {

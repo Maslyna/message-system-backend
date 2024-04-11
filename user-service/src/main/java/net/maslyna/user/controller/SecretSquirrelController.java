@@ -22,7 +22,7 @@ public class SecretSquirrelController {
         return userService.exists(userId);
     }
 
-    @GetMapping("/exists")
+    @PostMapping("/exists")
     public Mono<Map<UUID, Boolean>> exists(@RequestBody List<UUID> users) {
         return userService.exists(users);
     }

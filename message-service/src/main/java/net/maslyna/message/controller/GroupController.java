@@ -26,8 +26,8 @@ public class GroupController {
         return Mono.empty();
     }
 
-//    @PostMapping()
-//    public Mono<UUID> create(@RequestHeader("userId") UUID user, @Valid @RequestBody CreateGroup settings) {
-//        return service.create(user, settings).map(Group::getGroupId);
-//    }
+    @PostMapping()
+    public Mono<UUID> create(@RequestHeader("userId") UUID user, @Valid @RequestBody CreateGroup settings) {
+        return service.create(user, settings).map(Group::getGroupId);
+    }
 }

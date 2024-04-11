@@ -15,7 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -89,6 +93,14 @@ public class UserService {
 
     public Mono<Boolean> exists(final UUID id) {
         return userRepository.existsById(id);
+    }
+
+    public Mono<Map<UUID, Boolean>> exists(List<UUID> users) {
+        return Flux.fromIterable(users)
+                .flatMap(userId ->
+                        userRepository.existsById(userId)
+                                .map(exists -> Tuples.of(userId, exists))
+                ).collectMap(Tuple2::getT1, Tuple2::getT2);
     }
 
     @Transactional

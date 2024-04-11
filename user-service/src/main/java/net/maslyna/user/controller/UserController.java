@@ -46,9 +46,4 @@ public class UserController {
                 .map(mapper::userToUserDto)
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK));
     }
-
-    @GetMapping("/{userId}/exists")
-    public Mono<Boolean> exists(@PathVariable("userId") UUID userId) {
-        return userService.exists(userId);
-    }
 }

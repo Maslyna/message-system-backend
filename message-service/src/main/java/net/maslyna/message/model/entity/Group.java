@@ -7,7 +7,7 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 
@@ -32,5 +32,5 @@ public class Group {
 
     @Column("created_at")
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 }

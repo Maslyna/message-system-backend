@@ -10,7 +10,7 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,7 +26,18 @@ public class GroupMember {
     @PrimaryKeyColumn(name = "member_id", type = PrimaryKeyType.PARTITIONED, ordinal = 2)
     private UUID memberId;
 
+    @Column("role_name")
+    private String roleName;
+
+    @Column("is_super")
+    @Builder.Default
+    private boolean isSuper = false;
+
+    @Column("role_level")
+    @Builder.Default
+    private short roleLevel = 0;
+
     @CreatedDate
     @Column("joined_at")
-    private LocalDateTime joinedAt;
+    private LocalDate joinedAt;
 }

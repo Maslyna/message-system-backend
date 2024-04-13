@@ -8,7 +8,6 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -30,9 +29,6 @@ public class UserMessage {
 
     @Column("content")
     private String content;
-
-    @Column("file_ids")
-    private List<UUID> files;
 
     @Column("viewed")
     private boolean viewed;

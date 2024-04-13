@@ -31,9 +31,6 @@ public class GroupMessage {
     @Column("content")
     private String content;
 
-    @Column("file_ids")
-    private List<UUID> files;
-
     @Column("viewed_by_users")
     private List<UUID> viewedBy;
 

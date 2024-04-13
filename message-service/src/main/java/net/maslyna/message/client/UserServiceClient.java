@@ -1,5 +1,6 @@
 package net.maslyna.message.client;
 
+import lombok.extern.slf4j.Slf4j;
 import net.maslyna.message.client.property.ClientProperties;
 import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
 import org.springframework.core.ParameterizedTypeReference;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
+@Slf4j
 public class UserServiceClient {
     private final WebClient client;
 

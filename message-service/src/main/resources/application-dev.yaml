@@ -21,4 +21,6 @@ cassandra:
 
 server:
     port: 8100
-
+client:
+    user-service-base-url: http://user-service
+    base-message-agent: security-service

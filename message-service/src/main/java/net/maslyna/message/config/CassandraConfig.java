@@ -3,6 +3,7 @@ package net.maslyna.message.config;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import lombok.RequiredArgsConstructor;
+import net.maslyna.message.model.entity.Group;
 import net.maslyna.message.properties.CassandraProperties;
 import org.cognitor.cassandra.migration.spring.CassandraMigrationAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +12,11 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.cassandra.config.DefaultCqlBeanNames;
 import org.springframework.data.cassandra.config.EnableReactiveCassandraAuditing;
+import org.springframework.data.cassandra.core.mapping.event.ReactiveBeforeConvertCallback;
+import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
+import java.util.UUID;
 
 @Configuration
 @EnableReactiveCassandraAuditing
@@ -42,5 +46,15 @@ public class CassandraConfig {
                 .withLocalDatacenter(properties.getLocalDatacenter())
                 .build();
 
+    }
+
+    @Bean
+    public ReactiveBeforeConvertCallback<Group> groupBeforeConvertCallback() {
+        return (entity, tableName) -> {
+            if (entity.getGroupId() == null)
+                entity.setGroupId(UUID.randomUUID());
+
+            return Mono.just(entity);
+        };
     }
 }

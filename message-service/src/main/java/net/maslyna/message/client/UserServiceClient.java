@@ -39,4 +39,15 @@ public class UserServiceClient {
                     return response.bodyToMono(new ParameterizedTypeReference<>() {});
                 });
     }
+
+    public Mono<Boolean> isFriends(final UUID authenticated, final UUID userId) {
+        return client.get()
+                .uri("/api/ssc/v1/users/{userId}/permissions/addtogroup", userId)
+                .header("userId", String.valueOf(authenticated))
+                .exchangeToMono(response -> {
+                    if (!response.statusCode().is2xxSuccessful())
+                        return response.createError();
+                    return response.bodyToMono(Boolean.class);
+                });
+    }
 }

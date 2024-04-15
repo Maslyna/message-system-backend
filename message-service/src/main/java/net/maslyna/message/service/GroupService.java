@@ -10,10 +10,10 @@ import net.maslyna.message.model.entity.GroupMember;
 import net.maslyna.message.model.request.CreateGroup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,7 +35,7 @@ public class GroupService {
 
         return groupDAO.save(group).flatMap(savedGroup -> {
                     Mono<Void> saveOwner = saveGroupOwner(savedGroup, ownerId);
-                    Mono<Void> saveMembers = saveGroupMembers(savedGroup, groupSettings.users());
+                    Mono<Void> saveMembers = saveGroupMembers(ownerId, savedGroup, groupSettings.users());
                     return Mono.when(saveOwner, saveMembers);
                 })
                 .thenReturn(group);
@@ -62,18 +62,14 @@ public class GroupService {
                 .then();
     }
 
-    private Mono<Void> saveGroupMembers(final Group group, final Collection<UUID> memberIds) {
+    private Mono<Void> saveGroupMembers(final UUID ownerId, final Group group, final Collection<UUID> memberIds) {
         return client.usersExists(memberIds)
                 .flatMap(usersExist -> {
-                    List<UUID> existingUsers = usersExist.entrySet().stream() //TODO: validation, if user can add another user
-                            .filter(Map.Entry::getValue)
+                    Flux<Mono<Void>> savedMembers = Flux.fromStream(usersExist.entrySet().stream()
+                            .filter(Map.Entry::getValue) //if user only exists
                             .map(Map.Entry::getKey)
-                            .toList();
-
-                    List<Mono<Void>> savedMembers = existingUsers.stream()
-                            .map(memberId -> saveGroupMember(group, memberId, false))
-                            .toList();
-
+                    ).filterWhen(user -> client.isFriends(ownerId, user)) // check if group owner allowed to add this person to groups
+                            .map(memberId -> saveGroupMember(group, memberId, false));
                     return Mono.when(savedMembers);
                 });
     }

@@ -26,4 +26,10 @@ public class SecretSquirrelController {
     public Mono<Map<UUID, Boolean>> exists(@RequestBody List<UUID> users) {
         return userService.exists(users);
     }
+
+    @GetMapping("/{userId}/permissions/addtogroup")
+    public Mono<Boolean> isUserAllowedToAddToContacts(@PathVariable("userId") UUID userId,
+                                                      @RequestHeader("userId") UUID authenticated) {
+        return userService.isUserInContacts(userId, authenticated);
+    }
 }

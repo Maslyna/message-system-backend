@@ -4,6 +4,8 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import lombok.RequiredArgsConstructor;
 import net.maslyna.message.model.entity.Group;
+import net.maslyna.message.model.entity.GroupMessage;
+import net.maslyna.message.model.entity.UserMessage;
 import net.maslyna.message.properties.CassandraProperties;
 import org.cognitor.cassandra.migration.spring.CassandraMigrationAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -53,6 +55,26 @@ public class CassandraConfig {
         return (entity, tableName) -> {
             if (entity.getGroupId() == null)
                 entity.setGroupId(UUID.randomUUID());
+
+            return Mono.just(entity);
+        };
+    }
+
+    @Bean
+    public ReactiveBeforeConvertCallback<GroupMessage> groupMessageBeforeConvertCallback() {
+        return (entity, tableName) -> {
+            if (entity.getMessageId() == null)
+                entity.setMessageId(UUID.randomUUID());
+
+            return Mono.just(entity);
+        };
+    }
+
+    @Bean
+    public ReactiveBeforeConvertCallback<UserMessage> userMessageBeforeConvertCallback() {
+        return (entity, tableName) -> {
+            if (entity.getMessageId() == null)
+                entity.setMessageId(UUID.randomUUID());
 
             return Mono.just(entity);
         };

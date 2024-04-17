@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import net.maslyna.user.service.UserService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,11 @@ public class SecretSquirrelController {
     @PostMapping("/exists")
     public Mono<Map<UUID, Boolean>> exists(@RequestBody List<UUID> users) {
         return userService.exists(users);
+    }
+
+    @PostMapping("/checkContacts")
+    public Flux<Tuple2<UUID, Boolean>> isContacts(@RequestHeader("userId") UUID userId, @RequestBody List<UUID> users) {
+        return userService.isFriends(userId, users);
     }
 
     @GetMapping("/{userId}/permissions/addtogroup")

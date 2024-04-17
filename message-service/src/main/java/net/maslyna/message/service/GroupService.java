@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -35,7 +35,7 @@ public class GroupService {
 
         return groupDAO.save(group).flatMap(savedGroup -> {
                     Mono<Void> saveOwner = saveGroupOwner(savedGroup, ownerId);
-                    Mono<Void> saveMembers = saveGroupMembers(ownerId, savedGroup, groupSettings.users());
+                    Flux<Void> saveMembers = saveGroupMembers(ownerId, savedGroup, groupSettings.users());
                     return Mono.when(saveOwner, saveMembers);
                 })
                 .thenReturn(group);
@@ -62,16 +62,11 @@ public class GroupService {
                 .then();
     }
 
-    private Mono<Void> saveGroupMembers(final UUID ownerId, final Group group, final Collection<UUID> memberIds) {
-        return client.usersExists(memberIds)
-                .flatMap(usersExist -> {
-                    Flux<Mono<Void>> savedMembers = Flux.fromStream(usersExist.entrySet().stream()
-                            .filter(Map.Entry::getValue) //if user only exists
-                            .map(Map.Entry::getKey)
-                    ).filterWhen(user -> client.isFriends(ownerId, user)) // check if group owner allowed to add this person to groups
-                            .map(memberId -> saveGroupMember(group, memberId, false));
-                    return Mono.when(savedMembers);
-                });
+    private Flux<Void> saveGroupMembers(final UUID ownerId, final Group group, final Collection<UUID> memberIds) {
+        return client.isUsersInContacts(ownerId, memberIds)
+                .filter(Tuple2::getT2) //if user is owner friend
+                .map(Tuple2::getT1) // get user id
+                .flatMap(user -> saveGroupMember(group, user, false));
     }
 
     private Mono<Void> saveGroupMember(final Group group, final UUID memberId, final boolean isAdmin) {

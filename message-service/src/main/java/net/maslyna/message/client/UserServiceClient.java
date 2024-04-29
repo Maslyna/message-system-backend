@@ -12,7 +12,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,7 +32,7 @@ public class UserServiceClient {
         this.properties = properties;
     }
 
-    public Mono<Map<UUID, Boolean>> usersExists(final Collection<UUID> users) { //TODO: Flux would be better choice, but I'm too LAZY
+    public Mono<Map<UUID, Boolean>> usersExists(final Flux<UUID> users) { //TODO: Flux would be better choice, but I'm too LAZY
         return client.post()
                 .uri("/api/ssc/v1/users/exists")
                 .bodyValue(users)
@@ -44,7 +43,7 @@ public class UserServiceClient {
                 });
     }
 
-    public Flux<Tuple2<UUID, Boolean>> isUsersInContacts(final UUID userId, final Collection<UUID> users) {
+    public Flux<Tuple2<UUID, Boolean>> isUsersInContacts(final UUID userId, final Flux<UUID> users) {
         return client.post()
                 .uri("/api/ssc/v1/users/checkContacts")
                 .header(properties.userHeader(), String.valueOf(userId))

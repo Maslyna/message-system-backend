@@ -103,9 +103,8 @@ public class UserService {
                 ).collectMap(Tuple2::getT1, Tuple2::getT2);
     }
 
-    public Flux<Tuple2<UUID, Boolean>> isFriends(UUID userId, List<UUID> users) {
-        return Flux.fromStream(users.stream())
-                .filterWhen(this::exists)
+    public Flux<Tuple2<UUID, Boolean>> isUsersInContacts(UUID userId, Flux<UUID> users) {
+        return users.filterWhen(this::exists)
                 .flatMap(user -> isUserInContacts(user, userId)
                         .map(isContacts -> Tuples.of(user, isContacts)));
     }

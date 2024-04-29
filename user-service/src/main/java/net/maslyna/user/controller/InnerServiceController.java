@@ -2,6 +2,7 @@ package net.maslyna.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.maslyna.user.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/ssc/v1/users")
 @Validated
-public class SecretSquirrelController {
+public class InnerServiceController {
     private final UserService userService;
 
     @GetMapping("/{userId}/exists")
@@ -29,9 +30,11 @@ public class SecretSquirrelController {
         return userService.exists(users);
     }
 
-    @PostMapping("/checkContacts")
-    public Flux<Tuple2<UUID, Boolean>> isContacts(@RequestHeader("userId") UUID userId, @RequestBody List<UUID> users) {
-        return userService.isFriends(userId, users);
+    @PostMapping(value = "/group-membership-check",
+            consumes = MediaType.APPLICATION_NDJSON_VALUE,
+            produces = MediaType.APPLICATION_NDJSON_VALUE)
+    public Flux<Tuple2<UUID, Boolean>> isContacts(@RequestHeader("userId") UUID userId, @RequestBody Flux<UUID> users) {
+        return userService.isUsersInContacts(userId, users);
     }
 
     @GetMapping("/{userId}/permissions/addtogroup")

@@ -46,6 +46,8 @@ public class UserServiceClient {
     public Flux<Tuple2<UUID, Boolean>> isUsersInContacts(final UUID userId, final Flux<UUID> users) {
         return client.post()
                 .uri("/api/ssc/v1/users/checkContacts")
+                .contentType(MediaType.APPLICATION_NDJSON)
+                .accept(MediaType.APPLICATION_NDJSON)
                 .header(properties.userHeader(), String.valueOf(userId))
                 .bodyValue(users)
                 .exchangeToFlux(response -> {

@@ -6,7 +6,6 @@ import net.maslyna.message.exception.GroupNotFoundException;
 import net.maslyna.message.model.entity.Group;
 import net.maslyna.message.repository.GroupMemberRepository;
 import net.maslyna.message.repository.GroupRepository;
-import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Validated
 public class GroupDAO {
-    private final CassandraTemplate template;
     private final GroupRepository groupRepository;
     private final GroupMemberRepository memberRepository;
 

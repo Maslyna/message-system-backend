@@ -6,6 +6,7 @@ import net.maslyna.message.dao.GroupDAO;
 import net.maslyna.message.dao.GroupMembersDAO;
 import net.maslyna.message.exception.UnauthorizedGroupAccessException;
 import net.maslyna.message.model.entity.Group;
+import net.maslyna.message.model.entity.GroupMember;
 import net.maslyna.message.model.request.CreateGroup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,18 +30,18 @@ public class GroupService {
     }
 
     @Transactional
-    public Mono<Group> create(final UUID ownerId, final CreateGroup groupSettings) {
+    public Mono<Group> create(final UUID ownerId, final CreateGroup settings) {
         Group group = Group.builder()
                 .creator(ownerId)
-                .name(groupSettings.name())
-                .description(groupSettings.description())
-                .isPublic(groupSettings.isPublic())
+                .name(settings.name())
+                .description(settings.description())
+                .isPublic(settings.isPublic())
                 .build();
 
         return groupDAO.save(group)
                 .flatMap(savedGroup -> {
-                    Mono<Void> saveOwner = saveGroupOwner(savedGroup, ownerId);
-                    Mono<Void> saveMembers = saveGroupMembers(ownerId, savedGroup, Flux.fromIterable(groupSettings.users()));
+                    var saveOwner = saveGroupOwner(savedGroup, ownerId);
+                    var saveMembers = saveGroupMembers(ownerId, savedGroup, Flux.fromIterable(settings.users()));
                     return Mono.when(saveOwner, saveMembers)
                             .thenReturn(savedGroup);
                 });
@@ -58,18 +59,16 @@ public class GroupService {
     }
 
 
-    private Mono<Void> saveGroupOwner(final Group group, final UUID ownerId) {
-        return membersDAO.save(group.getGroupId(), ownerId, Short.MAX_VALUE, true)
-                .then();
+    private Mono<GroupMember> saveGroupOwner(final Group group, final UUID ownerId) {
+        return membersDAO.save(group.getGroupId(), ownerId, Short.MAX_VALUE, true);
     }
 
-    private Mono<Void> saveGroupMembers(final UUID ownerId, final Group group, final Flux<UUID> memberIds) {
+    private Flux<GroupMember> saveGroupMembers(final UUID ownerId, final Group group, final Flux<UUID> memberIds) {
         final Flux<UUID> members = client.isUsersInContacts(ownerId, memberIds)
                 .filter(Tuple2::getT2)
                 .map(Tuple2::getT1);
 
-        return membersDAO.saveAllInGroup(group.getGroupId(), members, (short)0, false)
-                .then();
+        return membersDAO.saveAllInGroup(group.getGroupId(), members, (short)0, false);
     }
 
 }

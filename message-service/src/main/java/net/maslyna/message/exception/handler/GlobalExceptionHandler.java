@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
 import reactor.core.publisher.Mono;
 
@@ -22,6 +23,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(WebClientResponseException.class)
+    public Mono<ResponseEntity<?>> handleWebClientResponseException(final WebClientResponseException e) {
+        return Mono.just(ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAs(Map.class)));
+    }
 
     @ExceptionHandler(GlobalServiceException.class)
     public Mono<ResponseEntity<?>> handleGlobalServiceException(final GlobalServiceException ex) {

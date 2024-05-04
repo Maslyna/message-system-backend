@@ -39,11 +39,12 @@ public class GroupController {
                                                flags = {Pattern.Flag.CASE_INSENSITIVE},
                                                message = "error.validation.sort.direction.message"
                                        )
-                                       String order
+                                       String order,
+                                       @RequestParam(value = "properties", defaultValue = "joinedAt") String[] properties
     ) {
         return service.getGroups(
                 user,
-                PageRequest.of(num, size, Sort.Direction.fromString(order))
+                PageRequest.of(num, size, Sort.Direction.fromString(order), properties)
         ).map(groups -> groups.map(mapper::toDto));
     }
 
